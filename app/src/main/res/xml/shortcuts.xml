@@ -1,0 +1,54 @@
+<?xml version ="1.0" encoding="utf-8"?>
+
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Add shortcuts that launch your app to a specific screen or task. -->
+    <!-- Learn more at https://developer.android.com/guide/topics/ui/shortcuts/creating-shortcuts -->
+
+    <!-- shortcutId 不能通过'@string/shortcut_wakeup_pc_id'的型式指定，但需要设为和其一致 -->
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_wakeup_pc"
+        android:shortcutId="shortcut_wakeup_pc"
+        android:shortcutShortLabel="@string/shortcut_label_wakeup_pc_short">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="net.donething.pc_phone.ShortcutActivity"
+            android:targetPackage="net.donething.pc_phone">
+            <!-- 传递的数据：name 必须为"id"，value 必须和上面的 android:shortcutId 一致 -->
+            <extra
+                android:name="id"
+                android:value="shortcut_wakeup_pc" />
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_clipboard_send"
+        android:shortcutId="shortcut_clipboard_send"
+        android:shortcutShortLabel="@string/shortcut_label_clipboard_send_short">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="net.donething.pc_phone.ShortcutActivity"
+            android:targetPackage="net.donething.pc_phone">
+            <extra
+                android:name="id"
+                android:value="shortcut_clipboard_send" />
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_clipboard_load"
+        android:shortcutId="shortcut_clipboard_load"
+        android:shortcutShortLabel="@string/shortcut_label_clipboard_load_short">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="net.donething.pc_phone.ShortcutActivity"
+            android:targetPackage="net.donething.pc_phone">
+            <extra
+                android:name="id"
+                android:value="shortcut_clipboard_load" />
+        </intent>
+    </shortcut>
+</shortcuts>
