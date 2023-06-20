@@ -1,10 +1,9 @@
-package net.donething.pc_phone.shortcuts
+package net.donething.pc_phone.tasks
 
 import android.util.Log
-import androidx.lifecycle.LifecycleRegistry
 import net.donething.pc_phone.MyApp
 import net.donething.pc_phone.R
-import net.donething.pc_phone.share.mac
+import org.jetbrains.annotations.Nullable
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
@@ -12,18 +11,17 @@ import java.net.InetAddress
 /**
  * 唤醒 PC
  */
-object WakeUpPC : IOperation() {
+object WakeUpPC : ITask<Nullable>() {
     private val itag = this::class.simpleName
-
-    override val lifecycle = LifecycleRegistry(this)
 
     override val label: String = MyApp.ctx.getString(R.string.shortcut_label_wakeup_pc_short)
 
-    override fun doOperation(): String {
+    override fun doTask(): String {
         // 执行耗时任务
         sendWakeOnLanPacket(mac)
         val msg = MyApp.ctx.getString(R.string.shortcut_tip_wakeup_pc_success)
         Log.i(itag, msg)
+
         return msg
     }
 

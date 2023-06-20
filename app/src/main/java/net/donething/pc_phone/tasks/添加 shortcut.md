@@ -39,12 +39,19 @@
 ```
 # 编写新的 shortcut 对应的功能代码
 
-在`shortcuts`目录下创建代码文件，创建`object`单例对象，需实现`IOperation`抽象类
+在`shortcuts`目录下创建代码文件，创建`object`单例对象，需实现`ITask`抽象类
 
-# 匹配 shortcut 和功能代码
+# 匹配 shortcutId 和功能代码
 
-修改`shortcuts\IOperation.kt`中的`parseOperation`函数，根据 `shortcutID` 匹配返回上步写的单例对象
+修改`tasks\TaskService.kt`
 
-```kotlin
-    MyApp.ctx.getString(R.string.shortcut_id_wakeup_pc) -> WakeUpPC
-```
+1. 增加常量 action 对应 shortcutId：
+    ```kotlin
+        var ACTION_WAKEUP_PC = MyApp.ctx.getString(R.string.shortcut_id_wakeup_pc)
+    ```
+
+2. 修改`onStartCommand`函数中的`when`语句，根据 `shortcutID` 返回上步写的单例对象
+    ```kotlin
+        ACTION_WAKEUP_PC -> WakeUpPC
+    ```
+   

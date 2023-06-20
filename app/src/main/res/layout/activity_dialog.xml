@@ -2,27 +2,42 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/dialog_background"
-    android:padding="16dp">
+    android:padding="@dimen/activity_vertical_margin">
 
     <!-- 标题 -->
-    <TextView
+    <LinearLayout
         android:id="@+id/tv_activity_dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_activity_dialog_title_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:gravity="center"
+            android:textSize="@dimen/title"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <!-- 内容 -->
-    <TextView
+    <LinearLayout
         android:id="@+id/tv_activity_dialog_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_activity_dialog_title"
-        android:layout_marginBottom="32dp"
-        android:textIsSelectable="true"
-        android:textSize="16sp" />
+        android:layout_marginBottom="@dimen/margin_large"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_activity_dialog_content_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/text" />
+    </LinearLayout>
 
     <!-- 操作按钮 -->
     <LinearLayout
@@ -38,9 +53,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="8dp"
+            android:padding="@dimen/padding_small"
             android:text="@string/bn_cancel"
-            android:textSize="18sp" />
+            android:textSize="@dimen/text" />
 
         <Button
             android:id="@+id/bn_activity_dialog_ok"
@@ -48,8 +63,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="8dp"
+            android:padding="@dimen/padding_small"
             android:text="@string/bn_ok"
-            android:textSize="18sp" />
+            android:textSize="@dimen/text" />
     </LinearLayout>
 </RelativeLayout>

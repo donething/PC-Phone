@@ -1,40 +1,34 @@
 package net.donething.pc_phone
 
+import android.content.Intent
 import android.os.Bundle
-import android.window.OnBackInvokedDispatcher
-import androidx.activity.OnBackPressedCallback
-import net.donething.pc_phone.shortcuts.IOperation
-import net.donething.pc_phone.shortcuts.RunAt
+import net.donething.pc_phone.tasks.TaskService
+import net.donething.pc_phone.onfocus.ClipboardSend
 
 /**
  * 点击快捷方式启动的对话框 Activity
  */
 class ShortcutActivity : DialogActivity() {
-    // 点击 shortcut 后，需要执行的任务
-    private lateinit var operation: IOperation
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        
         // 根据 shortcut id 解析得到操作
         val id = intent?.getStringExtra("id") ?: ""
-        operation = IOperation.parseOperation(id)
 
-        binding.tvActivityDialogTitle.text = operation.label
-
-        finishOnTouchOutsides(true)
-
-        // 执行任务
-        if (operation.runAt == RunAt.OnCreate) {
-            operation.start(binding.tvActivityDialogContent)
+        if (id != getString(R.string.shortcut_id_clipboard_send)) {
+            val intent = Intent(this, TaskService::class.java)
+            intent.action = id
+            startForegroundService(intent)
+            finishAndRemoveTask()
         }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
 
-        if (operation.runAt == RunAt.OnWindowFocusChanged && hasFocus) {
-            operation.start(binding.tvActivityDialogContent)
+        if (intent?.getStringExtra("id") == getString(R.string.shortcut_id_clipboard_send) && hasFocus) {
+            binding.tvActivityDialogTitleText.text = ClipboardSend.label
+            ClipboardSend.start(binding.tvActivityDialogContentText)
         }
     }
 }

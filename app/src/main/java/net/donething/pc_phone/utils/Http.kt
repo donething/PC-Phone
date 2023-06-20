@@ -2,113 +2,101 @@ package net.donething.pc_phone.utils
 
 import android.content.Context
 import android.net.Uri
-import net.donething.pc_phone.MyApp
+import android.util.Log
 import net.donething.pc_phone.entity.Rest
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
-import java.io.BufferedReader
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-import java.io.FileInputStream
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
-import java.io.PrintWriter
-import java.net.HttpURLConnection
-import java.net.URL
 
 // 表单
 data class Form(val op: String?, val data: Any?)
 
 object Http {
+    private val itag = this::class.simpleName
+
     fun <T> get(urlString: String): Rest<T> {
+        val client = OkHttpClient()
+        val request = Request.Builder().url(urlString).build()
 
-        val url = URL(urlString)
-        val httpURLConnection = url.openConnection() as HttpURLConnection
-        httpURLConnection.requestMethod = "GET"
+        val resp = client.newCall(request).execute()
+        if (!resp.isSuccessful) {
+            throw Exception("响应码：${resp.code}")
+        }
 
-        val inputStream = BufferedInputStream(httpURLConnection.inputStream)
-        val text = readStream(inputStream)
+        if (resp.body == null) {
+            throw Exception("响应体为空")
+        }
+
+        val text = resp.body!!.string()
 
         return parseJSON(text)
     }
 
     fun <T> postJSON(urlString: String, jsonObj: Any): Rest<T> {
-        val url = URL(urlString)
+        val client = OkHttpClient()
         val json = Comm.gson.toJson(jsonObj)
-        val httpURLConnection = url.openConnection() as HttpURLConnection
-        httpURLConnection.requestMethod = "POST"
-        httpURLConnection.setRequestProperty("Content-Type", "application/json")
+        val body = json.toRequestBody("application/json;charset=utf-8".toMediaType())
+        val request = Request.Builder().url(urlString).post(body).build()
 
-        val outputStream = BufferedOutputStream(httpURLConnection.outputStream)
-        outputStream.write(json.toByteArray(Charsets.UTF_8))
-        outputStream.flush()
-
-        if (httpURLConnection.responseCode != HttpURLConnection.HTTP_OK) {
-            throw Exception("响应码：${httpURLConnection.responseCode}")
+        val resp = client.newCall(request).execute()
+        if (!resp.isSuccessful) {
+            throw Exception("响应码：${resp.code}")
         }
 
-        val inputStream = BufferedInputStream(httpURLConnection.inputStream)
-        val text = readStream(inputStream)
-        outputStream.close()
+        if (resp.body == null) {
+            throw Exception("响应体为空")
+        }
+
+        val text = resp.body!!.string()
 
         return parseJSON(text)
     }
 
     fun <T> postFiles(urlString: String, uris: List<Uri>, ctx: Context): Rest<T> {
-        val boundary = "===" + System.currentTimeMillis() + "==="
-        val lineEnd = "\r\n"
+        val client = OkHttpClient()
+        val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
 
-        val url = URL(urlString)
-        val httpURLConnection = url.openConnection() as HttpURLConnection
-        httpURLConnection.requestMethod = "POST"
-        httpURLConnection.setRequestProperty("Connection", "Keep-Alive")
-        httpURLConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=$boundary")
+        val tmpFiles = ArrayList<File>()
+        for (uri in uris) {
+            Log.i(itag, "当前发送的文件：${uri.path}")
 
-        val outputStream = BufferedOutputStream(httpURLConnection.outputStream)
-        val writer = PrintWriter(OutputStreamWriter(outputStream, "UTF-8"), true)
-
-        uris.forEach { uri ->
             val inputStream = ctx.contentResolver.openInputStream(uri)
-            val fileName = uri.lastPathSegment
-            val contentType = "application/octet-stream"
-
-            if (inputStream != null) {
-                writer.append("--$boundary").append(lineEnd)
-                    .append("Content-Disposition: form-data; name=\"file\"; filename=\"$fileName\"").append(lineEnd)
-                    .append("Content-Type: $contentType").append(lineEnd).append(lineEnd).flush()
-
-                inputStream.copyTo(outputStream)
-
-                writer.append(lineEnd).flush()
-                inputStream.close()
+            val file = File(ctx.cacheDir, uri.lastPathSegment ?: System.currentTimeMillis().toString())
+            file.createNewFile()
+            file.outputStream().use { outputStream ->
+                inputStream?.copyTo(outputStream)
             }
+            inputStream?.close()
+
+            val requestBody = file.asRequestBody("application/octet-stream".toMediaType())
+            builder.addFormDataPart("file", file.name, requestBody)
+            tmpFiles.add(file)
         }
 
-        writer.append("--$boundary--").append(lineEnd).flush()
+        val request = Request.Builder().url(urlString).post(builder.build()).build()
 
-        if (httpURLConnection.responseCode != HttpURLConnection.HTTP_OK) {
-            throw Exception("响应码：${httpURLConnection.responseCode}")
+        val resp = client.newCall(request).execute()
+
+        if (!resp.isSuccessful) {
+            throw Exception("响应码：${resp.code}")
         }
 
-        val inputStream = BufferedInputStream(httpURLConnection.inputStream)
-        val text = readStream(inputStream)
+        if (resp.body == null) {
+            throw Exception("响应体为空")
+        }
 
-        outputStream.close()
-        writer.close()
+        val text = resp.body!!.string()
+
+        // 删除所有临时文件
+        for (file in tmpFiles) {
+            file.delete()
+        }
 
         return parseJSON(text)
-    }
-
-    private fun readStream(inputStream: InputStream): String {
-        val reader = BufferedReader(InputStreamReader(inputStream))
-        val stringBuilder = StringBuilder()
-        var line: String?
-
-        while (reader.readLine().also { line = it } != null) {
-            stringBuilder.append(line)
-        }
-
-        return stringBuilder.toString()
     }
 
     private fun <T> parseJSON(text: String): Rest<T> {

@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "net.donething.pc_phone"
-        minSdk 30
+        minSdk 33
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -48,6 +48,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation "androidx.work:work-runtime:2.8.1"
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

@@ -1,26 +1,23 @@
-package net.donething.pc_phone.shortcuts
+package net.donething.pc_phone.tasks
 
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LifecycleRegistry
 import net.donething.pc_phone.MyApp
 import net.donething.pc_phone.R
 import net.donething.pc_phone.utils.Http
-import net.donething.pc_phone.share.pcHost
+import org.jetbrains.annotations.Nullable
 
 /**
  * 获取 PC 剪贴板
  */
-object ClipboardLoad : IOperation() {
+object ClipboardLoad : ITask<Nullable>() {
     private val itag = this::class.simpleName
-
-    override val lifecycle = LifecycleRegistry(this)
 
     override val label: String = MyApp.ctx.getString(R.string.shortcut_label_clipboard_load_short)
 
-    override fun doOperation(): String {
+    override fun doTask(): String {
         // 获取 PC 文本
         val obj = Http.get<String>("$pcHost/api/clip/get")
 
@@ -30,9 +27,9 @@ object ClipboardLoad : IOperation() {
             return obj.msg
         }
 
-        val clipboardManager = MyApp.ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipManager = MyApp.ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("text", obj.data)
-        clipboardManager.setPrimaryClip(clip)
+        clipManager.setPrimaryClip(clip)
 
         return "\"${obj.data}\""
     }

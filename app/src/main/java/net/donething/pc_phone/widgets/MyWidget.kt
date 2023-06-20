@@ -9,7 +9,7 @@ import android.util.Log
 import android.widget.RemoteViews
 import net.donething.pc_phone.ShortcutActivity
 import net.donething.pc_phone.R
-import net.donething.pc_phone.share.WidgetService
+import net.donething.pc_phone.tasks.TaskService
 
 class MyWidget : AppWidgetProvider() {
     companion object {
@@ -31,7 +31,7 @@ class MyWidget : AppWidgetProvider() {
 
             // 唤醒 PC
             // Android 8 以后，需要以前台服务（Foreground Service）开启目标 Service
-            val wakeupPCIntent = Intent(context, WidgetService::class.java)
+            val wakeupPCIntent = Intent(context, TaskService::class.java)
             // 指定需要执行的事件
             wakeupPCIntent.action = actionWakeupPC
             val wakeupPCPendingIntent = PendingIntent.getService(
@@ -52,7 +52,7 @@ class MyWidget : AppWidgetProvider() {
 
 
             // 获取 PC 剪贴板
-            val loadClipIntent = Intent(context, WidgetService::class.java)
+            val loadClipIntent = Intent(context, TaskService::class.java)
             loadClipIntent.action = actionClipLoad
             val loadClipPendingIntent = PendingIntent.getService(
                 context, 0, loadClipIntent, PendingIntent.FLAG_IMMUTABLE
