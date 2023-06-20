@@ -11,6 +11,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 // 表单
 data class Form(val op: String?, val data: Any?)
@@ -18,8 +19,14 @@ data class Form(val op: String?, val data: Any?)
 object Http {
     private val itag = this::class.simpleName
 
+    private fun newClient(): OkHttpClient {
+        // 默认的 OkHttpClient 的连接超时、读取超时都是10秒
+        val builder = OkHttpClient().newBuilder().connectTimeout(30, TimeUnit.SECONDS).readTimeout(1, TimeUnit.HOURS)
+        return builder.build()
+    }
+
     fun <T> get(urlString: String): Rest<T> {
-        val client = OkHttpClient()
+        val client = newClient()
         val request = Request.Builder().url(urlString).build()
 
         val resp = client.newCall(request).execute()
@@ -37,7 +44,7 @@ object Http {
     }
 
     fun <T> postJSON(urlString: String, jsonObj: Any): Rest<T> {
-        val client = OkHttpClient()
+        val client = newClient()
         val json = Comm.gson.toJson(jsonObj)
         val body = json.toRequestBody("application/json;charset=utf-8".toMediaType())
         val request = Request.Builder().url(urlString).post(body).build()
@@ -57,7 +64,7 @@ object Http {
     }
 
     fun <T> postFiles(urlString: String, uris: List<Uri>, ctx: Context): Rest<T> {
-        val client = OkHttpClient()
+        val client = newClient()
         val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
 
         val tmpFiles = ArrayList<File>()

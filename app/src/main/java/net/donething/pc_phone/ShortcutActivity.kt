@@ -11,7 +11,7 @@ import net.donething.pc_phone.onfocus.ClipboardSend
 class ShortcutActivity : DialogActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         // 根据 shortcut id 解析得到操作
         val id = intent?.getStringExtra("id") ?: ""
 

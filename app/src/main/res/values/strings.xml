@@ -14,24 +14,26 @@
     <string name="no_enable_dialog_bn_cancel">取消</string>
     <string name="no_channel_id_bg_task">no_channel_id_bg_task</string>
     <string name="no_channel_name_bg_task">后台任务的前台通知</string>
-    <string name="no_bg_task_title">正在执行后台任务</string>
-    <string name="no_bg_task_msg">正在执行后台任务……</string>
+    <string name="no_bg_task_content_default">开始执行…</string>
 
     <string name="tip_data_null">数据为空</string>
 
     <!-- 快捷方式 -->
     <string name="shortcut_id_wakeup_pc">shortcut_wakeup_pc</string>
+    <string name="shortcut_id_clipboard_clear">shortcut_clipboard_clear</string>
     <string name="shortcut_id_clipboard_send">shortcut_clipboard_send</string>
     <string name="shortcut_id_clipboard_load">shortcut_clipboard_load</string>
 
     <string name="shortcut_label_unknown_task">未知的操作</string>
     <string name="shortcut_label_wakeup_pc_short">唤醒 PC</string>
+    <string name="shortcut_label_clipboard_clear_short">清空剪贴板</string>
     <string name="shortcut_label_clipboard_send_short">发送剪贴板到 PC</string>
     <string name="shortcut_label_clipboard_load_short">获取 PC 剪贴板</string>
 
     <string name="shortcut_tip_do_task_err">执行"%s"出错</string>
     <string name="shortcut_tip_wakeup_pc_success">已发送唤醒包到 PC</string>
-    <string name="shortcut_tip_clipbroad_send_blank">剪贴板中没有数据，或无法访问（当应用不在前台时）</string>
+    <string name="shortcut_tip_clipboard_clear_success">已清空剪贴板</string>
+    <string name="shortcut_tip_clipbroad_send_data_null">剪贴板中没有数据，或无法访问（当应用不在前台时）</string>
     <string name="shortcut_tip_clipbroad_send_read_text_fail">读取剪贴板中的文本失败</string>
 
     <string name="bn_ok">确定</string>

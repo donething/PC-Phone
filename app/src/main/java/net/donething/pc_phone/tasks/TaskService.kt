@@ -33,6 +33,7 @@ class TaskService : Service(), LifecycleOwner {
 
         // 快捷方式的 Action，需与 shortcuts.xml 中的 shortcutID 一致
         var ACTION_WAKEUP_PC = MyApp.ctx.getString(R.string.shortcut_id_wakeup_pc)
+        var ACTION_CLIP_CLEAR = MyApp.ctx.getString(R.string.shortcut_id_clipboard_clear)
         var ACTION_CLIP_LOAD = MyApp.ctx.getString(R.string.shortcut_id_clipboard_load)
 
         // 分享的 Action
@@ -59,6 +60,8 @@ class TaskService : Service(), LifecycleOwner {
         val task = when (action) {
             ACTION_WAKEUP_PC -> WakeUpPC
 
+            ACTION_CLIP_CLEAR -> ClipboardClear
+
             ACTION_CLIP_LOAD -> ClipboardLoad
 
             ACTION_PC_SEND_TEXT -> {
@@ -74,20 +77,17 @@ class TaskService : Service(), LifecycleOwner {
             else -> UnknownTask
         }
 
-        start(task)
-
-        stopSelf()
-        return super.onStartCommand(intent, flags, startId)
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-
-        val notification = builder.setContentTitle(getString(R.string.no_bg_task_title))
-            .setContentText(getString(R.string.no_bg_task_msg)).setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setWhen(System.currentTimeMillis()).build()
+        val notification =
+            builder.setContentTitle(task.label).setContentText(getString(R.string.no_bg_task_content_default))
+                .setSmallIcon(R.drawable.ic_launcher_foreground).setWhen(System.currentTimeMillis()).build()
         // 启动前台服务
         startForeground(notificationId, notification)
+
+        // start()中调用 lifecycleScope.launch 中的代码是异步执行，不会等任务执行完后返回
+        // 所以不要在start()后调用stopSelf()，会直接停止服务，虽然任务依然会继续，带前面的通知会取消发出
+        start(task)
+
+        return super.onStartCommand(intent, flags, startId)
     }
 
     // 在子线程执行任务，在主线程（UI线程）显示结果
@@ -106,6 +106,10 @@ class TaskService : Service(), LifecycleOwner {
                     "$title：$e"
                 }
             }
+
+            // 执行玩任务后，停止服务
+            // 不能放在调用 reNotify() 后，会导致发送的通知取消发出
+            ctx.stopSelf()
 
             val title = "已执行'${task.label}'"
 

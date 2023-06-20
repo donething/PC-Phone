@@ -27,16 +27,16 @@ object ClipboardSend : LifecycleOwner {
     val label: String = MyApp.ctx.getString(R.string.shortcut_label_clipboard_send_short)
 
     private fun doTask(): String {
-        val clipboardManager = MyApp.ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipManager = MyApp.ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
-        if (!clipboardManager.hasPrimaryClip()) {
+        if (!clipManager.hasPrimaryClip()) {
             // Android 10 中 只有默认输入法(IME)或者是目前处于焦点的应用, 才能访问到剪贴板数据.
-            val msg = MyApp.ctx.getString(R.string.shortcut_tip_clipbroad_send_blank)
+            val msg = MyApp.ctx.getString(R.string.shortcut_tip_clipbroad_send_data_null)
             Log.i(itag, msg)
             return msg
         }
 
-        val item = clipboardManager.primaryClip?.getItemAt(0)
+        val item = clipManager.primaryClip?.getItemAt(0)
         val text = item?.text?.toString()
         if (text.isNullOrEmpty()) {
             val msg = MyApp.ctx.getString(R.string.shortcut_tip_clipbroad_send_read_text_fail)
