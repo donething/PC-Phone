@@ -41,6 +41,7 @@
 
     <!-- 操作按钮 -->
     <LinearLayout
+        android:id="@+id/tv_activity_dialog_operation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_activity_dialog_content"

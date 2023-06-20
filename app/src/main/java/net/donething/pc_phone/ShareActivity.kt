@@ -28,7 +28,7 @@ class ShareActivity : DialogActivity() {
             finishAndRemoveTask()
         }
 
-        binding.tvActivityDialogTitleText.text = "分享到…"
+        binding.tvActivityDialogTitleText.text = getString(R.string.share_activity_title)
 
         // 替换对话框的默认视图为分享面板
         val sharePanel = LayoutInflater.from(this).inflate(R.layout.layout_share_panel, null)
@@ -40,8 +40,12 @@ class ShareActivity : DialogActivity() {
         // 绑定分享按钮的点击事件
         val ibSendPC = sharePanel.findViewById<ImageButton>(R.id.ib_share_send_pc)
         ibSendPC.setOnClickListener(onShareImageButtonClick)
+
+        // 不需显示操作栏
+        binding.tvActivityDialogOperation.visibility = View.GONE
     }
 
+    // 点击了分享按钮后，执行的事件
     private val onShareImageButtonClick = View.OnClickListener {
         if (intent == null || intent.type == null) {
             val msg = "分享的 intent 或数据 type 为空：$intent"

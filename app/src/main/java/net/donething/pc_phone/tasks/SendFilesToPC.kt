@@ -21,8 +21,16 @@ object SendFilesToPC : ITask<ArrayList<Uri>>() {
             return msg
         }
 
-        val obj = Http.postFiles<String>("$pcHost/api/file/send", data!!, MyApp.ctx)
+        val obj = Http.postFiles<Map<String, String>>(
+            "$pcHost/api/file/send", data!!, MyApp.ctx
+        )
 
-        return obj.data
+        val result = StringBuilder()
+
+        obj.data.forEach { (key, value) ->
+            result.append("$key $value\n")
+        }
+
+        return result.toString()
     }
 }

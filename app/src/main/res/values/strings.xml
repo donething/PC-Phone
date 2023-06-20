@@ -38,9 +38,11 @@
     <string name="bn_cancel">取消</string>
 
     <!-- 分享 -->
+    <string name="share_activity_title">分享到…</string>
+    <string name="share_activity_label_send_pc">PC</string>
+
     <string name="share_action_pc_send_text">ACTION_PC_SEND_TEXT</string>
     <string name="share_action_pc_send_files">ACTION_PC_SEND_FILES</string>
-    <string name="share_label_send_pc">PC</string>
 
     <string name="label_pc_send_files">发送文件到 PC</string>
     <string name="label_pc_send_text">发送文本到 PC</string>
