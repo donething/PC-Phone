@@ -24,6 +24,23 @@
 
     <shortcut
         android:enabled="true"
+        android:icon="@drawable/ic_shortcut_media_timed_pause"
+        android:shortcutId="shortcut_media_timed_pause"
+        android:shortcutShortLabel="@string/shortcut_label_media_timed_pause_short">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="net.donething.pc_phone.ShortcutActivity"
+            android:targetPackage="net.donething.pc_phone">
+            <extra
+                android:name="id"
+                android:value="shortcut_media_timed_pause" />
+        </intent>
+    </shortcut>
+
+    <divider />
+
+    <shortcut
+        android:enabled="true"
         android:icon="@drawable/ic_shortcut_clipboard_send"
         android:shortcutId="shortcut_clipboard_send"
         android:shortcutShortLabel="@string/shortcut_label_clipboard_send_short">

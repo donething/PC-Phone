@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.donething.pc_phone.DialogActivity
@@ -31,6 +32,7 @@ class TaskService : Service(), LifecycleOwner {
         var ACTION_WAKEUP_PC = MyApp.ctx.getString(R.string.shortcut_id_wakeup_pc)
         var ACTION_CLIP_CLEAR = MyApp.ctx.getString(R.string.shortcut_id_clipboard_clear)
         var ACTION_CLIP_LOAD = MyApp.ctx.getString(R.string.shortcut_id_clipboard_load)
+        var ACTION_MEDIA_TIMED_PAUSE = MyApp.ctx.getString(R.string.shortcut_id_media_timed_pause)
 
         // 分享的 Action
         var ACTION_PC_SEND_TEXT = MyApp.ctx.getString(R.string.share_action_pc_send_text)
@@ -59,6 +61,12 @@ class TaskService : Service(), LifecycleOwner {
             ACTION_CLIP_CLEAR -> ClipboardClear
 
             ACTION_CLIP_LOAD -> ClipboardLoad
+
+            ACTION_MEDIA_TIMED_PAUSE -> {
+                // 延时一小时后暂停
+                MediaTimedPause.delay = 60 * 60 * 1000L
+                MediaTimedPause
+            }
 
             ACTION_PC_SEND_TEXT -> {
                 SendTextToPC.data = intent.getStringExtra(INTENT_DATA_KEY)
@@ -89,9 +97,13 @@ class TaskService : Service(), LifecycleOwner {
     // 在子线程执行任务，在主线程（UI线程）显示结果
     private fun <T> start(task: ITask<T>) {
         val ctx = this
+
         lifecycleScope.launch {
             // 执行耗时任务
             val result = withContext(Dispatchers.IO) {
+                // 按任务配置延时执行
+                delay(task.delay ?: 0)
+
                 try {
                     task.doTask()
                 } catch (e: Exception) {
@@ -105,6 +117,7 @@ class TaskService : Service(), LifecycleOwner {
 
             // 执行玩任务后，停止服务
             // 不能放在调用 reNotify() 后，会导致发送的通知取消发出
+            // 如果任务极快完成（如doTask中判断条件不合直接返回），导致stopSelf()马上被调用，会导致通知发不出来
             ctx.stopSelf()
 
             val title = "已执行'${task.label}'"

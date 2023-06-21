@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import net.donething.pc_phone.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
+    private val itag = this::class.simpleName
 
     private var _binding: FragmentHomeBinding? = null
 
