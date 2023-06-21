@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="PC 设置">
+        <EditTextPreference
+            android:key="pc_addr"
+            android:summary="如 http://192.168.1.6:1234"
+            android:title="服务端的地址和端口" />
+
+        <EditTextPreference
+            android:key="pc_mac"
+            android:summary="如 20:1C:25:C3:10:A1"
+            android:title="有线网卡的 MAC 地址。用于网络唤醒 PC" />
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen>

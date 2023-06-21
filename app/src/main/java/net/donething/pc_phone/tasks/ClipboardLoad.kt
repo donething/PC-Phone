@@ -6,6 +6,7 @@ import android.content.Context
 import android.util.Log
 import net.donething.pc_phone.MyApp
 import net.donething.pc_phone.R
+import net.donething.pc_phone.ui.preferences.Pref
 import net.donething.pc_phone.utils.Http
 import org.jetbrains.annotations.Nullable
 
@@ -18,8 +19,13 @@ object ClipboardLoad : ITask<Nullable>() {
     override val label: String = MyApp.ctx.getString(R.string.shortcut_label_clipboard_load_short)
 
     override fun doTask(): String {
+        val pcAddr = MyApp.myDS.getString(Pref.PC_ADDR, "")
+        if (pcAddr.isNullOrBlank()) {
+            return MyApp.ctx.getString(R.string.tip_pc_addr_null)
+        }
+
         // 获取 PC 文本
-        val obj = Http.get<String>("$pcHost/api/clip/get")
+        val obj = Http.get<String>("$pcAddr/api/clip/get")
 
         Log.i(itag, "响应：'${obj.msg}'")
 

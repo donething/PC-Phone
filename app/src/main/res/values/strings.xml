@@ -2,7 +2,7 @@
     <string name="app_name">PC-Phone</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_preferences">Preferences</string>
     <string name="title_activity_dialog">DialogActivity</string>
     <string name="title_activity_shortcut">ShortcutActivity</string>
     <string name="title_activity_share">ShareActivity</string>
@@ -17,6 +17,8 @@
     <string name="no_bg_task_content_default">开始执行…</string>
 
     <string name="tip_data_null">数据为空</string>
+    <string name="tip_pc_addr_null">选项中的 PC Addr 为空</string>
+    <string name="tip_pc_mac_null">选项中的 PC MAC 地址为空</string>
 
     <!-- 快捷方式 -->
     <string name="shortcut_id_wakeup_pc">shortcut_wakeup_pc</string>

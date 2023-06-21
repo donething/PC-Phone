@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import net.donething.pc_phone.MyApp
 import net.donething.pc_phone.R
+import net.donething.pc_phone.ui.preferences.Pref
 import net.donething.pc_phone.utils.Http
 
 /**
@@ -21,8 +22,13 @@ object SendFilesToPC : ITask<ArrayList<Uri>>() {
             return msg
         }
 
+        val pcAddr = MyApp.myDS.getString(Pref.PC_ADDR, "")
+        if (pcAddr.isNullOrBlank()) {
+            return MyApp.ctx.getString(R.string.tip_pc_addr_null)
+        }
+
         val obj = Http.postFiles<Map<String, String>>(
-            "$pcHost/api/file/send", data!!, MyApp.ctx
+            "$pcAddr/api/file/send", data!!, MyApp.ctx
         )
 
         val result = StringBuilder()

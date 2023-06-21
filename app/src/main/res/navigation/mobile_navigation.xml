@@ -18,8 +18,8 @@
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="net.donething.pc_phone.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_preferences"
+        android:name="net.donething.pc_phone.ui.preferences.PreferencesFragment"
+        android:label="@string/title_preferences"
+        tools:layout="@xml/fragment_preferences" />
 </navigation>

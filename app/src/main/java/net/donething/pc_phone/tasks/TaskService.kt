@@ -22,10 +22,6 @@ import net.donething.pc_phone.R
 import net.donething.pc_phone.utils.MyNo
 import kotlin.random.Random
 
-
-const val mac = "30:9C:23:D3:C0:89"
-const val pcHost = "http://192.168.68.96:8800"
-
 class TaskService : Service(), LifecycleOwner {
     companion object {
         // Intent 数据的键

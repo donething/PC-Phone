@@ -3,6 +3,7 @@ package net.donething.pc_phone.tasks
 import android.util.Log
 import net.donething.pc_phone.MyApp
 import net.donething.pc_phone.R
+import net.donething.pc_phone.ui.preferences.Pref
 import org.jetbrains.annotations.Nullable
 import java.net.DatagramPacket
 import java.net.DatagramSocket
@@ -17,6 +18,11 @@ object WakeUpPC : ITask<Nullable>() {
     override val label: String = MyApp.ctx.getString(R.string.shortcut_label_wakeup_pc_short)
 
     override fun doTask(): String {
+        val mac = MyApp.myDS.getString(Pref.PC_MAC, "")
+        if (mac.isNullOrBlank()) {
+            return MyApp.ctx.getString(R.string.tip_pc_mac_null)
+        }
+
         // 执行耗时任务
         sendWakeOnLanPacket(mac)
         val msg = MyApp.ctx.getString(R.string.shortcut_tip_wakeup_pc_success)
