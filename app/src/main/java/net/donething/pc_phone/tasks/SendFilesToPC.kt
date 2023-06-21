@@ -10,7 +10,7 @@ import net.donething.pc_phone.utils.Http
 /**
  * 发送内容到 PC
  */
-object SendFilesToPC : ITask<ArrayList<Uri>>() {
+class SendFilesToPC(data: ArrayList<Uri>?) : ITask<ArrayList<Uri>>(data) {
     private val itag = this::class.simpleName
 
     override val label: String = MyApp.ctx.getString(R.string.label_pc_send_files)
@@ -28,7 +28,7 @@ object SendFilesToPC : ITask<ArrayList<Uri>>() {
         }
 
         val obj = Http.postFiles<Map<String, String>>(
-            "$pcAddr/api/file/send", data!!, MyApp.ctx
+            "$pcAddr/api/file/send", data, MyApp.ctx
         )
 
         val result = StringBuilder()

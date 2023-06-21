@@ -10,13 +10,13 @@ import net.donething.pc_phone.utils.Http
 /**
  * 发送内容到 PC
  */
-object SendTextToPC : ITask<String>() {
+class SendTextToPC(data: String?) : ITask<String>(data) {
     private val itag = this::class.simpleName
 
     override val label: String = MyApp.ctx.getString(R.string.label_pc_send_text)
 
     override fun doTask(): String {
-        if (data == null) {
+        if (data.isNullOrBlank()) {
             val msg = MyApp.ctx.getString(R.string.tip_data_null)
             Log.i(itag, msg)
             return msg

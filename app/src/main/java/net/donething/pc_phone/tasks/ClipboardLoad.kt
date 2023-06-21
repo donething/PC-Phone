@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable
 /**
  * 获取 PC 剪贴板
  */
-object ClipboardLoad : ITask<Nullable>() {
+class ClipboardLoad : ITask<Nullable>() {
     private val itag = this::class.simpleName
 
     override val label: String = MyApp.ctx.getString(R.string.shortcut_label_clipboard_load_short)

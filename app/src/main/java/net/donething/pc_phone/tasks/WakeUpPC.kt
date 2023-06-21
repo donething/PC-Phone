@@ -12,7 +12,7 @@ import java.net.InetAddress
 /**
  * 唤醒 PC
  */
-object WakeUpPC : ITask<Nullable>() {
+class WakeUpPC : ITask<Nullable>() {
     private val itag = this::class.simpleName
 
     override val label: String = MyApp.ctx.getString(R.string.shortcut_label_wakeup_pc_short)

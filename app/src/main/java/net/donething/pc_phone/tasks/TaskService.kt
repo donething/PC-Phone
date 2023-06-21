@@ -32,6 +32,7 @@ class TaskService : Service(), LifecycleOwner {
         var ACTION_WAKEUP_PC = MyApp.ctx.getString(R.string.shortcut_id_wakeup_pc)
         var ACTION_CLIP_CLEAR = MyApp.ctx.getString(R.string.shortcut_id_clipboard_clear)
         var ACTION_CLIP_LOAD = MyApp.ctx.getString(R.string.shortcut_id_clipboard_load)
+        var ACTION_CLIP_SEND = MyApp.ctx.getString(R.string.shortcut_id_clipboard_send)
         var ACTION_MEDIA_TIMED_PAUSE = MyApp.ctx.getString(R.string.shortcut_id_media_timed_pause)
 
         // 分享的 Action
@@ -56,27 +57,20 @@ class TaskService : Service(), LifecycleOwner {
         Log.i(itag, "收到 Action '$action'")
 
         val task = when (action) {
-            ACTION_WAKEUP_PC -> WakeUpPC
+            ACTION_WAKEUP_PC -> WakeUpPC()
 
-            ACTION_CLIP_CLEAR -> ClipboardClear
+            ACTION_CLIP_CLEAR -> ClipboardClear()
 
-            ACTION_CLIP_LOAD -> ClipboardLoad
+            ACTION_CLIP_LOAD -> ClipboardLoad()
 
-            ACTION_MEDIA_TIMED_PAUSE -> {
-                // 延时一小时后暂停
-                MediaTimedPause.delay = 60 * 60 * 1000L
-                MediaTimedPause
-            }
+            ACTION_CLIP_SEND -> ClipboardSend(intent.getStringExtra(INTENT_DATA_KEY))
 
-            ACTION_PC_SEND_TEXT -> {
-                SendTextToPC.data = intent.getStringExtra(INTENT_DATA_KEY)
-                SendTextToPC
-            }
+            // 延时一小时后暂停
+            ACTION_MEDIA_TIMED_PAUSE -> MediaTimedPause(60 * 60 * 1000L)
 
-            ACTION_PC_SEND_FILES -> {
-                SendFilesToPC.data = intent.getParcelableArrayListExtra(INTENT_DATA_KEY, Uri::class.java)
-                SendFilesToPC
-            }
+            ACTION_PC_SEND_TEXT -> SendTextToPC(intent.getStringExtra(INTENT_DATA_KEY))
+
+            ACTION_PC_SEND_FILES -> SendFilesToPC(intent.getParcelableArrayListExtra(INTENT_DATA_KEY, Uri::class.java))
 
             else -> UnknownTask
         }

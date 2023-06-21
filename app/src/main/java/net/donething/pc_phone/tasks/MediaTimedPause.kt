@@ -4,13 +4,11 @@ import android.content.Context
 import android.media.AudioManager
 import android.util.Log
 import android.view.KeyEvent
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import net.donething.pc_phone.MyApp
 import net.donething.pc_phone.R
 import org.jetbrains.annotations.Nullable
 
-object MediaTimedPause : ITask<Nullable>() {
+class MediaTimedPause(delay: Long? = 0) : ITask<Nullable>(delay = delay) {
     private val itag = this::class.simpleName
 
     override val label: String = MyApp.ctx.getString(R.string.shortcut_label_media_timed_pause_short)
