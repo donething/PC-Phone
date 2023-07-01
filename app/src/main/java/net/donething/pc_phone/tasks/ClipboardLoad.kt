@@ -25,7 +25,7 @@ class ClipboardLoad : ITask<Nullable>() {
         }
 
         // 获取 PC 文本
-        val obj = Http.get<String>("$pcAddr/api/clip/get")
+        val obj = Http.getTextOrFile<String>("$pcAddr/api/clip/get")
 
         Log.i(itag, "响应：'${obj.msg}'")
 
@@ -34,9 +34,9 @@ class ClipboardLoad : ITask<Nullable>() {
         }
 
         val clipManager = MyApp.ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("text", obj.data)
+        val clip = ClipData.newPlainText("text", obj.msg)
         clipManager.setPrimaryClip(clip)
 
-        return "\"${obj.data}\""
+        return "\"${obj.msg}\""
     }
 }
