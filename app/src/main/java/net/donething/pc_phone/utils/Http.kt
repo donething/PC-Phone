@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
-import net.donething.pc_phone.MyApp
 import net.donething.pc_phone.entity.Rest
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
