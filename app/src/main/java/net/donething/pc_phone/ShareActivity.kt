@@ -37,16 +37,21 @@ class ShareActivity : DialogActivity() {
         parent.removeView(tvTextContent)
         parent.addView(sharePanel)
 
+
         // 绑定分享按钮的点击事件
         val ibSendPC = sharePanel.findViewById<ImageButton>(R.id.ib_share_send_pc)
-        ibSendPC.setOnClickListener(onShareImageButtonClick)
+        ibSendPC.setOnClickListener(onSendPCButtonClick)
+
+        val ibTgFH = sharePanel.findViewById<ImageButton>(R.id.ib_share_tg_fh)
+        ibTgFH.setOnClickListener(onTgFHButtonClick)
+
 
         // 不需显示操作栏
         binding.tvActivityDialogOperation.visibility = View.GONE
     }
 
-    // 点击了分享按钮后，执行的事件
-    private val onShareImageButtonClick = View.OnClickListener {
+    // 发送到 PC
+    private val onSendPCButtonClick = View.OnClickListener {
         if (intent == null || intent.type == null) {
             val msg = "分享的 intent 或数据 type 为空：$intent"
             Log.i(itag, msg)
@@ -81,5 +86,10 @@ class ShareActivity : DialogActivity() {
         serviceIntent.action = action
         startForegroundService(serviceIntent)
         finishAndRemoveTask()
+    }
+
+    // 发送到 TG 番号群组
+    private val onTgFHButtonClick = View.OnClickListener {
+
     }
 }

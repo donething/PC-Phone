@@ -46,6 +46,7 @@
     <!-- 分享 -->
     <string name="share_activity_title">分享到…</string>
     <string name="share_activity_label_send_pc">PC</string>
+    <string name="share_activity_label_tg_fh">TG 番号</string>
 
     <string name="share_action_pc_send_text">ACTION_PC_SEND_TEXT</string>
     <string name="share_action_pc_send_files">ACTION_PC_SEND_FILES</string>
