@@ -39,7 +39,7 @@
 ```
 # 编写新的 shortcut 对应的功能代码
 
-在`shortcuts`目录下创建代码文件，创建`object`单例对象，需实现`ITask`抽象类
+在`shortcuts`目录下创建代码文件，创建类，需实现`ITask`抽象类
 
 # 匹配 shortcutId 和功能代码
 
@@ -54,4 +54,3 @@
     ```kotlin
         ACTION_WAKEUP_PC -> WakeUpPC
     ```
-   

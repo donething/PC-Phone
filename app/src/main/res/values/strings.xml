@@ -22,6 +22,7 @@
 
     <!-- 快捷方式 -->
     <string name="shortcut_id_wakeup_pc">shortcut_wakeup_pc</string>
+    <string name="shortcut_id_shutdown_pc">shortcut_shutdown_pc</string>
     <string name="shortcut_id_clipboard_clear">shortcut_clipboard_clear</string>
     <string name="shortcut_id_clipboard_send">shortcut_clipboard_send</string>
     <string name="shortcut_id_clipboard_load">shortcut_clipboard_load</string>
@@ -29,6 +30,7 @@
 
     <string name="shortcut_label_unknown_task">未知的操作</string>
     <string name="shortcut_label_wakeup_pc_short">唤醒 PC</string>
+    <string name="shortcut_label_shutdown_pc_short">关闭 PC</string>
     <string name="shortcut_label_clipboard_clear_short">清空剪贴板</string>
     <string name="shortcut_label_clipboard_send_short">发送剪贴板到 PC</string>
     <string name="shortcut_label_clipboard_load_short">获取 PC 剪贴板</string>

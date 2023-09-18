@@ -84,4 +84,20 @@
                 android:value="shortcut_clipboard_clear" />
         </intent>
     </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_shutdown_pc"
+        android:shortcutId="shortcut_shutdown_pc"
+        android:shortcutShortLabel="@string/shortcut_label_shutdown_pc_short">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="net.donething.pc_phone.ShortcutActivity"
+            android:targetPackage="net.donething.pc_phone">
+            <!-- 传递的数据：name 必须为"id"，value 必须和上面的 android:shortcutId 一致 -->
+            <extra
+                android:name="id"
+                android:value="shortcut_shutdown_pc" />
+        </intent>
+    </shortcut>
 </shortcuts>

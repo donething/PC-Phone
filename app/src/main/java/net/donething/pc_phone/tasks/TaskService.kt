@@ -6,6 +6,7 @@ import android.app.Service
 import android.content.Intent
 import android.net.Uri
 import android.os.IBinder
+import android.os.SystemClock
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
@@ -21,7 +22,6 @@ import net.donething.pc_phone.DialogActivity
 import net.donething.pc_phone.MyApp
 import net.donething.pc_phone.R
 import net.donething.pc_phone.utils.MyNo
-import kotlin.random.Random
 
 class TaskService : Service(), LifecycleOwner {
     companion object {
@@ -30,6 +30,7 @@ class TaskService : Service(), LifecycleOwner {
 
         // 快捷方式的 Action，需与 shortcuts.xml 中的 shortcutID 一致
         var ACTION_WAKEUP_PC = MyApp.ctx.getString(R.string.shortcut_id_wakeup_pc)
+        var ACTION_SHUTDOWN_PC = MyApp.ctx.getString(R.string.shortcut_id_shutdown_pc)
         var ACTION_CLIP_CLEAR = MyApp.ctx.getString(R.string.shortcut_id_clipboard_clear)
         var ACTION_CLIP_LOAD = MyApp.ctx.getString(R.string.shortcut_id_clipboard_load)
         var ACTION_CLIP_SEND = MyApp.ctx.getString(R.string.shortcut_id_clipboard_send)
@@ -43,7 +44,7 @@ class TaskService : Service(), LifecycleOwner {
     private val itag = this::class.java.simpleName
 
     // 唯一的通知 ID
-    private val notificationId = "${System.currentTimeMillis()}_${Random.nextInt()}".hashCode()
+    private val notificationId = SystemClock.uptimeMillis().toInt()
 
     // 构建通知，开启前台服务
     private val builder = NotificationCompat.Builder(this, MyNo.ChannelIDBGTask)
@@ -56,8 +57,11 @@ class TaskService : Service(), LifecycleOwner {
 
         Log.i(itag, "收到 Action '$action'")
 
+        // 根据 Intent 中的参数，解析需要执行的任务
         val task = when (action) {
             ACTION_WAKEUP_PC -> WakeUpPC()
+
+            ACTION_SHUTDOWN_PC -> ShutdownPC()
 
             ACTION_CLIP_CLEAR -> ClipboardClear()
 
@@ -75,9 +79,12 @@ class TaskService : Service(), LifecycleOwner {
             else -> UnknownTask
         }
 
-        val notification =
-            builder.setContentTitle(task.label).setContentText(getString(R.string.no_bg_task_content_default))
-                .setSmallIcon(R.drawable.ic_launcher_foreground).setWhen(System.currentTimeMillis()).build()
+        val notification = builder.setContentTitle(task.label)
+            .setContentText(getString(R.string.no_bg_task_content_default))
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setWhen(System.currentTimeMillis())
+            .build()
+
         // 启动前台服务
         startForeground(notificationId, notification)
 
@@ -85,7 +92,7 @@ class TaskService : Service(), LifecycleOwner {
         // 所以不要在start()后调用stopSelf()，会直接停止服务，虽然任务依然会继续，带前面的通知会取消发出
         start(task)
 
-        return super.onStartCommand(intent, flags, startId)
+        return START_NOT_STICKY
     }
 
     // 在子线程执行任务，在主线程（UI线程）显示结果

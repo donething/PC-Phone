@@ -25,7 +25,10 @@ object Http {
 
     private fun newClient(): OkHttpClient {
         // 默认的 OkHttpClient 的连接超时、读取超时都是10秒
-        val builder = OkHttpClient().newBuilder().connectTimeout(30, TimeUnit.SECONDS).readTimeout(1, TimeUnit.HOURS)
+        val builder = OkHttpClient().newBuilder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(1, TimeUnit.HOURS)
+
         return builder.build()
     }
 
