@@ -14,6 +14,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.io.File
 import java.io.FileOutputStream
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 
 
@@ -78,8 +80,9 @@ object Http {
             val inputStream = resp.body!!.byteStream()
             val filename = getFilename(resp)
             val dstDirFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            val dstPath = dstDirFile.absolutePath + File.separator + filename
+            val tmpPath = dstDirFile.absolutePath + File.separator + filename
 
+            val dstPath = genUniqueFileName(tmpPath)
             Log.i(itag, "保存文件到：$dstPath")
 
             val outputStream = FileOutputStream(dstPath)
@@ -94,7 +97,8 @@ object Http {
             return Rest(0, "收到文件，已保存到应用目录", null)
         }
 
-        throw Exception("未知的响应类型：" + resp.body!!.contentType().toString())
+        // throw Exception("：" + resp.body!!.contentType().toString())
+        return Rest(0, "接收 PC 剪贴板中的文件出错，未知的响应类型：${resp.body!!.contentType().toString()}")
     }
 
     fun <T> postJSON(urlString: String, jsonObj: Any): Rest<T> {
@@ -162,6 +166,27 @@ object Http {
 
     private fun <T> parseJSON(text: String): Rest<T> {
         return Comm.gson.fromJson<Rest<T>>(text, Rest::class.java)
+    }
+
+    /**
+     * 保存文件时，不覆盖已存在的同名文件
+     */
+    private fun genUniqueFileName(dstPath: String): String {
+        // 判断文件在本地是否已存在
+        val fileCk = File(dstPath)
+        // 不存在则不用取新名
+        if (!fileCk.exists()) {
+            return dstPath
+        }
+
+        // 存在则重命名新文件（加上时间）
+        val filename = fileCk.name
+        val time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))
+        val basename = filename.substringBeforeLast('.')
+        val ext = filename.substringAfterLast('.')
+        val fullname = "${basename}__$time.$ext"
+
+        return fileCk.parent!! + File.separator + fullname
     }
 
     /**

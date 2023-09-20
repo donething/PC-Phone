@@ -24,7 +24,7 @@ class ClipboardLoad : ITask<Nullable>() {
             return MyApp.ctx.getString(R.string.tip_pc_addr_null)
         }
 
-        // 获取 PC 文本
+        // 获取 PC 文本/文件
         val obj = Http.getTextOrFile<String>("$pcAddr/api/clip/get")
 
         Log.i(itag, "响应：'${obj.msg}'")

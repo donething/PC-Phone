@@ -33,7 +33,7 @@ class SendFilesToPC(data: ArrayList<Uri>?) : ITask<ArrayList<Uri>>(data) {
 
         val result = StringBuilder()
 
-        obj.data.forEach { (key, value) ->
+        obj.data?.forEach { (key, value) ->
             result.append("$key $value\n")
         }
 
