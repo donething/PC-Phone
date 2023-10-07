@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 
 
 // 表单
-data class Form(val op: String?, val data: Any?)
+data class Form<T>(val op: String?, val data: T?)
 
 object Http {
     private val itag = this::class.simpleName
