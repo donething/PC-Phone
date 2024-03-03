@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.net.Uri
 import android.os.IBinder
 import android.os.SystemClock
@@ -86,7 +87,7 @@ class TaskService : Service(), LifecycleOwner {
             .build()
 
         // 启动前台服务
-        startForeground(notificationId, notification)
+        startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
 
         // start()中调用 lifecycleScope.launch 中的代码是异步执行，不会等任务执行完后返回
         // 所以不要在start()后调用stopSelf()，会直接停止服务，虽然任务依然会继续，带前面的通知会取消发出
