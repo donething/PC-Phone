@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.switchmaterial.SwitchMaterial
 import net.donething.pc_phone.R
 import net.donething.pc_phone.database.AppEntity
 
@@ -25,7 +26,8 @@ val AppEntity.alpha: Float
 /**
  * 应用列表适配器
  */
-class AppEntityAdapter : ListAdapter<AppEntity, AppEntityAdapter.AppEntityViewHolder>(DIFF_CALLBACK) {
+class AppEntityAdapter(private val fragment: AppsFragment) :
+    ListAdapter<AppEntity, AppEntityAdapter.AppEntityViewHolder>(DIFF_CALLBACK) {
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<AppEntity>() {
             override fun areItemsTheSame(oldItem: AppEntity, newItem: AppEntity): Boolean {
@@ -70,6 +72,12 @@ class AppEntityAdapter : ListAdapter<AppEntity, AppEntityAdapter.AppEntityViewHo
             try {
                 // 使用 Uri.parse 跳转到应用在 Google Play 上的页面
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appName"))
+
+                // 选中了使用 Google play 下载应用
+                val swGooglePlay = fragment.view?.findViewById<SwitchMaterial>(R.id.sw_apps_googleplay)
+                if (swGooglePlay?.isChecked == true) {
+                    intent.setPackage("com.android.vending")
+                }
 
                 it.context.startActivity(intent)
             } catch (anfe: ActivityNotFoundException) {

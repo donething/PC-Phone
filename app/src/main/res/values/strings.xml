@@ -58,7 +58,8 @@
     <string name="label_pc_send_text">发送文本到 PC</string>
 
     <!-- 应用 -->
-    <string name="apps_backup_bn_title">备份用户应用的信息</string>
+    <string name="apps_backup_bn_title">备份应用</string>
+    <string name="apps_download_sw_google_label">Google Play</string>
     <string name="apps_entity_icon_label">应用图标</string>
 
     <!-- 选项 -->

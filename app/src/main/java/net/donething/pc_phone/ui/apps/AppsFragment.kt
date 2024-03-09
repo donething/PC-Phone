@@ -49,7 +49,7 @@ class AppsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = AppEntityAdapter()
+        val adapter = AppEntityAdapter(this)
         val recyclerView = view.findViewById<RecyclerView>(R.id.appListRecyclerView)
         // RecyclerView 必需一个 LayoutManager 来管理其子视图的布局。如果没有设置，它将无法显示任何内容
         recyclerView.layoutManager = LinearLayoutManager(context)
