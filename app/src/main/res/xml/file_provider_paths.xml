@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 没有 "databases-path" 所以使用 "cache-path" -->
+<!-- https://developer.android.com/reference/androidx/core/content/FileProvider -->
+<paths>
+    <cache-path name="mydatabases" path="." />
+</paths>

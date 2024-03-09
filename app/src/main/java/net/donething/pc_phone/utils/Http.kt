@@ -1,26 +1,43 @@
 package net.donething.pc_phone.utils
 
+import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import net.donething.pc_phone.entity.Rest
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import okio.BufferedSink
+import okio.source
 import java.io.File
 import java.io.FileOutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 
-
 // 表单
 data class Form<T>(val op: String?, val data: T?)
+
+// Uri to RequestBody. 适配大文件，不全部读到内存
+fun Uri.asRequestBody(contentResolver: ContentResolver, mimeType: String): RequestBody {
+    return object : RequestBody() {
+        override fun contentType() = mimeType.toMediaTypeOrNull()
+
+        override fun writeTo(sink: BufferedSink) {
+            contentResolver.openInputStream(this@asRequestBody)?.use { inputStream ->
+                sink.writeAll(inputStream.source())
+            }
+        }
+    }
+}
 
 object Http {
     private val itag = this::class.simpleName
@@ -34,6 +51,9 @@ object Http {
         return builder.build()
     }
 
+    /**
+     * GET JSON
+     */
     fun <T> get(urlString: String): Rest<T> {
         val client = newClient()
         val request = Request.Builder().url(urlString).build()
@@ -53,7 +73,7 @@ object Http {
     }
 
     /**
-     * 获取文本或文件（获取 PC 剪贴板时）
+     * GET 文本或文件（获取 PC 剪贴板时）
      */
     fun <T> getTextOrFile(urlString: String): Rest<T?> {
         val client = newClient()
@@ -101,6 +121,9 @@ object Http {
         return Rest(0, "接收 PC 剪贴板中的文件出错，未知的响应类型：${resp.body!!.contentType().toString()}")
     }
 
+    /**
+     * POST JSON 数据
+     */
     fun <T> postJSON(urlString: String, jsonObj: Any): Rest<T> {
         val client = newClient()
         val json = Comm.gson.toJson(jsonObj)
@@ -121,25 +144,17 @@ object Http {
         return parseJSON(text)
     }
 
+    /**
+     * POST 上传文件
+     */
     fun <T> postFiles(urlString: String, uris: List<Uri>, ctx: Context): Rest<T> {
         val client = newClient()
         val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
 
-        val tmpFiles = ArrayList<File>()
         for (uri in uris) {
             Log.i(itag, "当前发送的文件：${uri.path}")
-
-            val inputStream = ctx.contentResolver.openInputStream(uri)
-            val file = File(ctx.cacheDir, uri.lastPathSegment ?: System.currentTimeMillis().toString())
-            file.createNewFile()
-            file.outputStream().use { outputStream ->
-                inputStream?.copyTo(outputStream)
-            }
-            inputStream?.close()
-
-            val requestBody = file.asRequestBody("application/octet-stream".toMediaType())
-            builder.addFormDataPart("file", file.name, requestBody)
-            tmpFiles.add(file)
+            val requestBody = uri.asRequestBody(ctx.contentResolver, "application/octet-stream")
+            builder.addFormDataPart("file", File(uri.path ?: "未知文件名").name, requestBody)
         }
 
         val request = Request.Builder().url(urlString).post(builder.build()).build()
@@ -155,11 +170,6 @@ object Http {
         }
 
         val text = resp.body!!.string()
-
-        // 删除所有临时文件
-        for (file in tmpFiles) {
-            file.delete()
-        }
 
         return parseJSON(text)
     }

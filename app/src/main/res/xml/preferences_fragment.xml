@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- preferences 被视作资源文件，不能放在 layout 中 -->
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="PC 设置"
+        app:iconSpaceReserved="false">
+
+        <EditTextPreference
+            android:key="pc_lan_ip"
+            android:summary="如 192.168.1.6"
+            android:title="在局域网中的 IP 地址"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            android:key="pc_server_port"
+            android:summary="如 12345"
+            android:title="上后台服务监听的端口"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            android:key="pc_mac"
+            android:summary="如 20:1C:25:C3:10:A1"
+            android:title="有线网卡的 MAC 地址，用于网络唤醒"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="备份与恢复"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:key="backup_start"
+            android:summary="使用文件分享功能来备份数据文件"
+            android:title="备份数据"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            android:key="backup_restore"
+            android:summary="选择备份文件来恢复数据"
+            android:title="恢复数据"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen>

@@ -77,6 +77,7 @@ class TaskService : Service(), LifecycleOwner {
 
             ACTION_PC_SEND_FILES -> SendFilesToPC(intent.getParcelableArrayListExtra(INTENT_DATA_KEY, Uri::class.java))
 
+            // 未知的任务
             else -> UnknownTask
         }
 

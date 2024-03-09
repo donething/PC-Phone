@@ -3,6 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_preferences">Preferences</string>
+    <string name="title_apps">Apps</string>
     <string name="title_activity_dialog">DialogActivity</string>
     <string name="title_activity_shortcut">ShortcutActivity</string>
     <string name="title_activity_share">ShareActivity</string>
@@ -17,7 +18,7 @@
     <string name="no_bg_task_content_default">开始执行…</string>
 
     <string name="tip_data_null">数据为空</string>
-    <string name="tip_pc_addr_null">选项中的 PC Addr 为空</string>
+    <string name="tip_pc_addr_null">选项中的 PC 局域网 IP 或端口为空</string>
     <string name="tip_pc_mac_null">选项中的 PC MAC 地址为空</string>
 
     <!-- 快捷方式 -->
@@ -55,5 +56,13 @@
 
     <string name="label_pc_send_files">发送文件到 PC</string>
     <string name="label_pc_send_text">发送文本到 PC</string>
+
+    <!-- 应用 -->
+    <string name="apps_backup_bn_title">备份用户应用的信息</string>
+    <string name="apps_entity_icon_label">应用图标</string>
+
+    <!-- 选项 -->
+    <string name="prefs_action_backup">ACTION_PREFS_BACKUP</string>
+    <string name="prefs_action_restore">ACTION_PREFS_RESTORE</string>
 
 </resources>

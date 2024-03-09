@@ -23,7 +23,7 @@ class ShortcutActivity : DialogActivity() {
         if (id != getString(R.string.shortcut_id_clipboard_send)) {
             val intent = Intent(this, TaskService::class.java)
             intent.action = id
-            startForegroundService(intent)
+            startService(intent)
 
             finishAndRemoveTask()
         }
@@ -64,6 +64,6 @@ class ShortcutActivity : DialogActivity() {
         val intent = Intent(this, TaskService::class.java)
         intent.action = TaskService.ACTION_CLIP_SEND
         intent.putExtra(TaskService.INTENT_DATA_KEY, text)
-        startForegroundService(intent)
+        startService(intent)
     }
 }

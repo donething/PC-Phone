@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import net.donething.pc_phone.databinding.FragmentDashboardBinding
 
 class DashboardFragment : Fragment() {
-
     private var _binding: FragmentDashboardBinding? = null
 
     // This property is only valid between onCreateView and

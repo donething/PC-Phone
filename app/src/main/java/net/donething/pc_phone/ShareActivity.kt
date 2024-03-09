@@ -84,7 +84,7 @@ class ShareActivity : DialogActivity() {
 
         // 启动执行任务的服务
         serviceIntent.action = action
-        startForegroundService(serviceIntent)
+        startService(serviceIntent)
         finishAndRemoveTask()
     }
 

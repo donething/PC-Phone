@@ -43,14 +43,4 @@
 
 # 匹配 shortcutId 和功能代码
 
-修改`tasks\TaskService.kt`
-
-1. 增加常量 action 对应 shortcutId：
-    ```kotlin
-        var ACTION_WAKEUP_PC = MyApp.ctx.getString(R.string.shortcut_id_wakeup_pc)
-    ```
-
-2. 修改`onStartCommand`函数中的`when`语句，根据 `shortcutID` 返回上步写的单例对象
-    ```kotlin
-        ACTION_WAKEUP_PC -> WakeUpPC
-    ```
+参加 [增加任务新.md](%E5%A2%9E%E5%8A%A0%E4%BB%BB%E5%8A%A1%E6%96%B0.md)
