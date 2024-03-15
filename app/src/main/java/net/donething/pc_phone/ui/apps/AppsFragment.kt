@@ -27,8 +27,6 @@ class AppsFragment : Fragment() {
     private val viewModel by viewModels<AppsViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val appsViewModel = ViewModelProvider(this)[AppsViewModel::class.java]
-
         _binding = FragmentAppsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -57,5 +55,15 @@ class AppsFragment : Fragment() {
 
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
         viewModel.allApps.observe(viewLifecycleOwner) { it.let { adapter.submitList(it) } }
+
+        // 观察LiveData以更新UI
+        viewModel.filteredApps.observe(viewLifecycleOwner) { adapter.submitList(it) }
+        // 设置开关监听器来更新是否显示预装应用
+        binding.swAppDisPreinstall.apply {
+            setOnCheckedChangeListener { _, isChecked ->
+                viewModel.setSwPreinstall(isChecked)
+            }
+        }
+
     }
 }

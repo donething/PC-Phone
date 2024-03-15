@@ -3,7 +3,6 @@ package net.donething.pc_phone.ui.apps
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
+import net.donething.pc_phone.MyApp
 import net.donething.pc_phone.R
 import net.donething.pc_phone.database.AppEntity
 
@@ -47,6 +47,7 @@ class AppEntityAdapter(private val fragment: AppsFragment) :
 
     override fun onBindViewHolder(holder: AppEntityViewHolder, position: Int) {
         val currentAppEntity = getItem(position)
+
         // 将ByteArray转换为Bitmap
         val bitmap = BitmapFactory.decodeByteArray(currentAppEntity.appIcon, 0, currentAppEntity.appIcon.size)
         holder.imageAppIcon.setImageBitmap(bitmap)
@@ -61,9 +62,17 @@ class AppEntityAdapter(private val fragment: AppsFragment) :
             textPackageName.alpha = currentAppEntity.alpha
             textVersionName.alpha = currentAppEntity.alpha
         }
-        // 根据是否已备份设置不同的颜色
+
+        // 根据是否已备份、预装应用设置不同的标识
+        val tags = mutableListOf<String>()
         if (currentAppEntity.backuped) {
-            holder.textAppName.setTextColor(Color.parseColor("#218A86"))
+            tags.add(MyApp.ctx.getString(R.string.apps_had_backuped))
+        }
+        if (currentAppEntity.preInstalled) {
+            tags.add(MyApp.ctx.getString(R.string.apps_preinstall))
+        }
+        if (tags.size != 0) {
+            holder.textAppTags.text = tags.joinToString(" ")
         }
 
         // 点击打开应用市场以便安装
@@ -95,6 +104,7 @@ class AppEntityAdapter(private val fragment: AppsFragment) :
     class AppEntityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageAppIcon: ImageView = itemView.findViewById(R.id.imageAppIcon)
         val textAppName: TextView = itemView.findViewById(R.id.textAppName)
+        val textAppTags: TextView = itemView.findViewById(R.id.textAppTags)
         val textPackageName: TextView = itemView.findViewById(R.id.textPackageName)
         val textVersionName: TextView = itemView.findViewById(R.id.textVersionName)
     }

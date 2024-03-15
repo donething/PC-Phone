@@ -23,7 +23,11 @@ import java.util.Locale
 
 // 应对 kotlin 对中文排序只比较 Unicode 码的问题
 val chineseCollator: Collator = Collator.getInstance(Locale.CHINESE)
-val comparator = compareBy<AppEntity> { it.installed }.thenBy(chineseCollator, AppEntity::appName)
+
+// kotlin 比较按升序排序：false 排在 true 前面：首先未安装排在前面、之后未备份排在前面、之后按中文排序
+val comparator = compareBy<AppEntity> { it.installed }
+    .thenBy { it.backuped }
+    .thenBy(chineseCollator, AppEntity::appName)
 
 /**
  * 处理数据库中应用信息的读取、插入
@@ -65,19 +69,34 @@ class AppsRepository(private val appsDao: AppsDao) {
             emitSource(updatedAppsLiveData)
         }
 
-    // 读取本机已安装的用户应用
-    private suspend fun getInstalledApps(packageManager: PackageManager): List<AppEntity> {
-        return withContext(Dispatchers.IO) {
-            val installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-            installedApps.filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
-                .map { appEntity ->
-                    val packageName = appEntity.packageName
-                    val appName = packageManager.getApplicationLabel(appEntity).toString()
-                    val versionName = packageManager.getPackageInfo(packageName, 0).versionName ?: "未知"
-                    val icon = drawableToByteArray(appEntity.loadIcon(packageManager))
+    // 读取本机已安装的用户应用（排除系统应用、预装应用）
+    private suspend fun getInstalledApps(pm: PackageManager): List<AppEntity> {
+        // 本应用安装时间
+        val installTime = pm.getPackageInfo(MyApp.ctx.packageName, 0).firstInstallTime
 
-                    AppEntity(packageName, appName, versionName, icon)
+        return withContext(Dispatchers.IO) {
+            val installedApps = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+
+            // 排除系统应用、预装应用
+            installedApps.filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }.map { appEntity ->
+                val packageName = appEntity.packageName
+                val appName = pm.getApplicationLabel(appEntity).toString()
+                val icon = drawableToByteArray(appEntity.loadIcon(pm))
+                val pi = pm.getPackageInfo(appEntity.packageName, 0)
+                val versionName = pi.versionName ?: "未知版本"
+
+                // 假定：比本应用先安装的即为预装应用
+                val preInstalled = pi.firstInstallTime < installTime
+
+                if (preInstalled) {
+                    Log.i(itag, "getInstalledApps: 预装应用：$appName($packageName)")
                 }
+
+                val app = AppEntity(packageName, appName, versionName, icon)
+                app.preInstalled = preInstalled
+
+                app
+            }
         }
     }
 

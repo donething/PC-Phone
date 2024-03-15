@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/margin_small"
     android:orientation="vertical"
     tools:context=".ui.apps.AppsFragment">
 
@@ -24,6 +25,17 @@
         android:text="@string/apps_download_sw_google_label"
         app:layout_constraintBottom_toBottomOf="@id/bn_backup_apps"
         app:layout_constraintStart_toEndOf="@id/bn_backup_apps"
+        app:layout_constraintTop_toTopOf="@id/bn_backup_apps" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/sw_app_dis_preinstall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:checked="false"
+        android:text="@string/apps_preinstall_sw_label"
+        app:layout_constraintBottom_toBottomOf="@id/bn_backup_apps"
+        app:layout_constraintStart_toEndOf="@id/sw_apps_googleplay"
         app:layout_constraintTop_toTopOf="@id/bn_backup_apps" />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -4,12 +4,22 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="padding_small">16dp</dimen>
+    <dimen name="margin_divider">2dp</dimen>
     <dimen name="margin_small">16dp</dimen>
-    <dimen name="margin_large">32dp</dimen>
-
-    <dimen name="share_icon_size">80dp</dimen>
+    <dimen name="margin_large">16dp</dimen>
+    <dimen name="padding_small">16dp</dimen>
 
     <dimen name="title">20sp</dimen>
     <dimen name="text">16sp</dimen>
+
+    <dimen name="icon_radius">16dp</dimen>
+
+    <!-- share -->
+    <dimen name="share_icon_size">80dp</dimen>
+
+    <!-- widget -->
+    <dimen name="widget_init">40dp</dimen>
+
+    <!-- apps -->
+    <dimen name="apps_icon">48dp</dimen>
 </resources>

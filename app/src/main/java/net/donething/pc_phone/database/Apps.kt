@@ -17,14 +17,22 @@ data class AppEntity(
     @PrimaryKey val packageName: String,
     val appName: String,
     val versionName: String,
-    val appIcon: ByteArray,
+    val appIcon: ByteArray
 ) {
     // 不存进数据库的属性
     /**
-     * 显示时本机是否已安装该包的应用
+     * 显示时本机是否已安装该应用
      */
     @Ignore
     var installed: Boolean = false
+
+    /**
+     * 是否为`预装应用`
+     *
+     * 安装时间在本应用之前，即判断为`预装应用`
+     */
+    @Ignore
+    var preInstalled: Boolean = false
 
     /**
      * 是否已备份过
@@ -47,4 +55,3 @@ interface AppsDao {
     @Query("DELETE FROM apps")
     fun deleteAll()
 }
-
