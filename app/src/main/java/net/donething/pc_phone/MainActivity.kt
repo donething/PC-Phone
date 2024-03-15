@@ -5,9 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import net.donething.pc_phone.databinding.ActivityMainBinding
@@ -28,15 +26,9 @@ class MainActivity : AppCompatActivity() {
 
         val navView: BottomNavigationView = binding.navView
 
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_apps, R.id.navigation_preferences
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+        val navController = navHostFragment.navController
         navView.setupWithNavController(navController)
 
         // 开启通知权限，设置通知频道
@@ -50,7 +42,8 @@ class MainActivity : AppCompatActivity() {
         val permissionsNeeded = mutableListOf<String>()
 
         if (ContextCompat.checkSelfPermission(
-                this, android.Manifest.permission.ACCESS_NOTIFICATION_POLICY
+                this,
+                android.Manifest.permission.ACCESS_NOTIFICATION_POLICY
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             permissionsNeeded.add(android.Manifest.permission.ACCESS_NOTIFICATION_POLICY)
