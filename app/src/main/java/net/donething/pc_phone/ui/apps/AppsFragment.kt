@@ -64,6 +64,5 @@ class AppsFragment : Fragment() {
                 viewModel.setSwPreinstall(isChecked)
             }
         }
-
     }
 }
