@@ -21,7 +21,7 @@ import net.donething.pc_phone.database.AppEntity
  * 对未安装的应用增加透明度，以标识
  */
 val AppEntity.alpha: Float
-    get() = if (this.installed) 1.0f else 0.5f
+    get() = if (this.installed) 1.0f else 0.6f
 
 /**
  * 应用列表适配器
@@ -88,6 +88,7 @@ class AppEntityAdapter(private val fragment: AppsFragment) :
                     intent.setPackage("com.android.vending")
                 }
 
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 it.context.startActivity(intent)
             } catch (anfe: ActivityNotFoundException) {
                 // Google Play 商店可能未安装，改为在网页中打开
