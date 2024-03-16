@@ -7,7 +7,9 @@
         <item name="colorOnPrimary">@color/white</item>
 
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?android:attr/windowBackground</item>
+        <!-- 不能用"?android:attr/windowBackground"，会导致选项页中点击 EditTextPreference 时崩溃-->
+        <!--  报错"Can't find ColorStateList from drawable resource ID #0x7f08003c"。不知原因 -->
+        <item name="android:statusBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
 
         <!-- Customize your theme here. -->
