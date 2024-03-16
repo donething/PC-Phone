@@ -64,18 +64,10 @@ class AppEntityAdapter(private val fragment: AppsFragment) :
         }
 
         // 根据是否已备份、预装应用设置不同的标识
-        val tags = mutableListOf<String>()
-        if (currentAppEntity.backuped) {
-            tags.add(MyApp.ctx.getString(R.string.apps_had_backuped))
-        }
-        if (currentAppEntity.preInstalled) {
-            tags.add(MyApp.ctx.getString(R.string.apps_preinstall))
-        }
-        if (tags.size != 0) {
-            holder.textAppTags.text = tags.joinToString(" ")
-        } else {
-            holder.textAppTags.text = ""
-        }
+        val color = if (currentAppEntity.backuped) R.color.apps_title_had_backuped else R.color.apps_title_no_backup
+        holder.textAppName.setTextColor(fragment.requireActivity().getColor(color))
+        // 预装应用增加删除线
+        holder.textAppName.paint.isStrikeThruText = currentAppEntity.preInstalled
 
         // 点击打开应用市场以便安装
         holder.itemView.setOnClickListener {

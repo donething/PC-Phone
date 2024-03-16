@@ -62,8 +62,6 @@
     <string name="apps_download_sw_google_label">Google Play</string>
     <string name="apps_preinstall_sw_label">显示预装</string>
     <string name="apps_entity_icon_label">应用图标</string>
-    <string name="apps_had_backuped">[已备份]</string>
-    <string name="apps_preinstall">[预装]</string>
 
     <!-- 选项 -->
     <string name="prefs_action_backup">ACTION_PREFS_BACKUP</string>

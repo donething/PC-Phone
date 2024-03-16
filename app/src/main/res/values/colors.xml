@@ -8,5 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="dialog_background">@android:color/white</color>
+    <color name="apps_title_had_backuped">#DD218A86</color>
+    <color name="apps_title_no_backup">#DDF44336</color>
 </resources>
