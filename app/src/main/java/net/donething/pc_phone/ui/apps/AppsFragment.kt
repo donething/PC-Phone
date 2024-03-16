@@ -30,7 +30,7 @@ class AppsFragment : Fragment() {
         _binding = FragmentAppsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val bnBackupApps: Button = binding.bnBackupApps
+        val bnBackupApps: Button = binding.bnAppsBackup
         bnBackupApps.setOnClickListener {
             Toast.makeText(context, "开始备份用户应用的信息", Toast.LENGTH_LONG).show()
             viewModel.backupAppsIntoDatabase()
@@ -48,18 +48,22 @@ class AppsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = AppEntityAdapter(this)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.appListRecyclerView)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.rv_apps_list)
         // RecyclerView 必需一个 LayoutManager 来管理其子视图的布局。如果没有设置，它将无法显示任何内容
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
-        viewModel.allApps.observe(viewLifecycleOwner) { it.let { adapter.submitList(it) } }
+        viewModel.allApps.observe(viewLifecycleOwner) {
+            binding.pbAppsLoading.visibility = View.GONE
+
+            it.let { adapter.submitList(it) }
+        }
 
         // 观察LiveData以更新UI
         viewModel.filteredApps.observe(viewLifecycleOwner) { adapter.submitList(it) }
         // 设置开关监听器来更新是否显示预装应用
-        binding.swAppDisPreinstall.apply {
+        binding.swAppsDisplayPreinstall.apply {
             setOnCheckedChangeListener { _, isChecked ->
                 viewModel.setSwPreinstall(isChecked)
             }

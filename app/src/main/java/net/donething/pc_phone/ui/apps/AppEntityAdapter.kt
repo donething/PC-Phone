@@ -73,6 +73,8 @@ class AppEntityAdapter(private val fragment: AppsFragment) :
         }
         if (tags.size != 0) {
             holder.textAppTags.text = tags.joinToString(" ")
+        } else {
+            holder.textAppTags.text = ""
         }
 
         // 点击打开应用市场以便安装
@@ -83,7 +85,7 @@ class AppEntityAdapter(private val fragment: AppsFragment) :
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appName"))
 
                 // 选中了使用 Google play 下载应用
-                val swGooglePlay = fragment.view?.findViewById<SwitchMaterial>(R.id.sw_apps_googleplay)
+                val swGooglePlay = fragment.view?.findViewById<SwitchMaterial>(R.id.sw_apps_on_googleplay)
                 if (swGooglePlay?.isChecked == true) {
                     intent.setPackage("com.android.vending")
                 }

@@ -9,7 +9,7 @@
     tools:context=".ui.apps.AppsFragment">
 
     <Button
-        android:id="@+id/bn_backup_apps"
+        android:id="@+id/bn_apps_backup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/apps_backup_bn_title"
@@ -17,34 +17,43 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/sw_apps_googleplay"
+        android:id="@+id/sw_apps_on_googleplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
         android:checked="true"
         android:text="@string/apps_download_sw_google_label"
-        app:layout_constraintBottom_toBottomOf="@id/bn_backup_apps"
-        app:layout_constraintStart_toEndOf="@id/bn_backup_apps"
-        app:layout_constraintTop_toTopOf="@id/bn_backup_apps" />
+        app:layout_constraintBottom_toBottomOf="@id/bn_apps_backup"
+        app:layout_constraintStart_toEndOf="@id/bn_apps_backup"
+        app:layout_constraintTop_toTopOf="@id/bn_apps_backup" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/sw_app_dis_preinstall"
+        android:id="@+id/sw_apps_display_preinstall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
         android:checked="false"
         android:text="@string/apps_preinstall_sw_label"
-        app:layout_constraintBottom_toBottomOf="@id/bn_backup_apps"
-        app:layout_constraintStart_toEndOf="@id/sw_apps_googleplay"
-        app:layout_constraintTop_toTopOf="@id/bn_backup_apps" />
+        app:layout_constraintBottom_toBottomOf="@id/bn_apps_backup"
+        app:layout_constraintStart_toEndOf="@id/sw_apps_on_googleplay"
+        app:layout_constraintTop_toTopOf="@id/bn_apps_backup" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/appListRecyclerView"
+        android:id="@+id/rv_apps_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin_small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bn_backup_apps" />
+        app:layout_constraintTop_toBottomOf="@id/bn_apps_backup" />
+
+    <ProgressBar
+        android:id="@+id/pb_apps_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
