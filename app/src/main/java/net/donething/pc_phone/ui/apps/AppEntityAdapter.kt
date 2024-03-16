@@ -9,13 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
-import net.donething.pc_phone.MyApp
 import net.donething.pc_phone.R
 import net.donething.pc_phone.database.AppEntity
+
 
 /**
  * 对未安装的应用增加透明度，以标识
@@ -99,7 +100,6 @@ class AppEntityAdapter(private val fragment: AppsFragment) :
     class AppEntityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageAppIcon: ImageView = itemView.findViewById(R.id.imageAppIcon)
         val textAppName: TextView = itemView.findViewById(R.id.textAppName)
-        val textAppTags: TextView = itemView.findViewById(R.id.textAppTags)
         val textPackageName: TextView = itemView.findViewById(R.id.textPackageName)
         val textVersionName: TextView = itemView.findViewById(R.id.textVersionName)
     }

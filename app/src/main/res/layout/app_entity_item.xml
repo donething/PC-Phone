@@ -33,14 +33,6 @@
         app:layout_constraintTop_toTopOf="@id/imageAppIconCard" />
 
     <TextView
-        android:id="@+id/textAppTags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_xsmall"
-        app:layout_constraintBaseline_toBaselineOf="@id/textAppName"
-        app:layout_constraintStart_toEndOf="@id/textAppName" />
-
-    <TextView
         android:id="@+id/textVersionName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -48,7 +40,7 @@
         android:gravity="end"
         app:layout_constraintBaseline_toBaselineOf="@id/textAppName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/textAppTags" />
+        app:layout_constraintStart_toEndOf="@id/textAppName" />
 
     <TextView
         android:id="@+id/textPackageName"
