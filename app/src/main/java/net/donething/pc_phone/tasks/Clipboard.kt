@@ -6,36 +6,71 @@ import android.content.Context
 import android.util.Log
 import net.donething.pc_phone.MyApp
 import net.donething.pc_phone.R
+import net.donething.pc_phone.entity.FileInfo
+import net.donething.pc_phone.entity.toFormattedString
 import net.donething.pc_phone.ui.preferences.PreferencesRepository
+import net.donething.pc_phone.utils.Comm
 import net.donething.pc_phone.utils.Http
 import org.jetbrains.annotations.Nullable
 
 /**
- * 获取 PC 剪贴板
+ * 获取 PC 剪贴板的文本
  */
-class ClipboardLoad : ITask<Nullable>() {
+class ClipboardLoadText : ITask<Nullable>() {
     private val itag = this::class.simpleName
 
-    override val label: String = MyApp.ctx.getString(R.string.shortcut_label_clipboard_load_short)
+    override val label: String = MyApp.ctx.getString(R.string.shortcut_label_clipboard_load_text_short)
 
     override fun doTask(): String {
         val pcAddr = PreferencesRepository.taskMode().getServerAddr()
             ?: return MyApp.ctx.getString(R.string.tip_pc_addr_null)
 
-        // 获取 PC 文本/文件
-        val obj = Http.getTextOrFile<String>("$pcAddr/api/clip/get")
+        // 获取 PC 剪贴板的文本
+        val obj = Http.get<String>("$pcAddr/api/clip/get")
 
-        Log.i(itag, "响应：'${obj.msg}'")
+        Log.i(itag, "响应 Msg: '${obj.msg}', Data: '${obj.data}'")
 
         if (obj.code != 0) {
             return obj.msg
         }
 
         val clipManager = MyApp.ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("text", obj.msg)
+        val clip = ClipData.newPlainText("text", obj.data)
         clipManager.setPrimaryClip(clip)
 
-        return "\"${obj.msg}\""
+        return "\"${obj.data}\""
+    }
+}
+
+/**
+ * 获取 PC 剪贴板中文本路径所指向的文件（夹）
+ */
+class ClipboardLoadFile : ITask<Nullable>() {
+    private val itag = this::class.simpleName
+
+    override val label: String = MyApp.ctx.getString(R.string.shortcut_label_clipboard_load_file_short)
+
+    override fun doTask(): String {
+        val pcAddr = PreferencesRepository.taskMode().getServerAddr()
+            ?: return MyApp.ctx.getString(R.string.tip_pc_addr_null)
+
+        // 获取 PC 文本/文件
+        val obj = Http.get<FileInfo>("$pcAddr/api/clip/get")
+
+        if (obj.code != 0) {
+            return obj.msg
+        }
+
+        if (obj.data == null) {
+            return "无法保存文件：数据为 null"
+        }
+
+        Log.i(itag, "响应 Msg: '${obj.msg}', Data: '${obj.data.toFormattedString()}'")
+
+        // 保存文件
+        Http.downloadFileOrDir(obj.data, Comm.fileRoot, pcAddr)
+
+        return "已保存远程文件(夹)'${obj.data.path}'到'${Comm.fileRoot.absolutePath}'"
     }
 }
 

@@ -3,8 +3,9 @@ package net.donething.pc_phone.utils
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import android.os.Environment
 import android.util.Log
+import com.google.gson.reflect.TypeToken
+import net.donething.pc_phone.entity.FileInfo
 import net.donething.pc_phone.entity.Rest
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -12,13 +13,13 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okio.BufferedSink
 import okio.source
 import java.io.File
-import java.io.FileOutputStream
+import java.lang.Error
+import java.net.URLEncoder
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
@@ -40,9 +41,9 @@ fun Uri.asRequestBody(contentResolver: ContentResolver, mimeType: String): Reque
 }
 
 object Http {
-    private val itag = this::class.simpleName
+    val itag = this::class.simpleName
 
-    private fun newClient(): OkHttpClient {
+    fun newClient(): OkHttpClient {
         // 默认的 OkHttpClient 的连接超时、读取超时都是10秒
         val builder = OkHttpClient().newBuilder()
             .connectTimeout(10, TimeUnit.SECONDS)
@@ -52,11 +53,11 @@ object Http {
     }
 
     /**
-     * GET JSON
+     * 执行请求
      */
-    fun <T> get(urlString: String): Rest<T> {
+    fun exec(url: String): Response {
         val client = newClient()
-        val request = Request.Builder().url(urlString).build()
+        val request = Request.Builder().url(url).build()
 
         val resp = client.newCall(request).execute()
         if (!resp.isSuccessful) {
@@ -67,64 +68,23 @@ object Http {
             throw Exception("响应体为空")
         }
 
+        return resp
+    }
+
+    /**
+     * GET JSON
+     */
+    inline fun <reified T> get(url: String): Rest<T> {
+        val resp = exec(url)
         val text = resp.body!!.string()
 
         return parseJSON(text)
     }
 
     /**
-     * GET 文本或文件（获取 PC 剪贴板时）
-     */
-    fun <T> getTextOrFile(urlString: String): Rest<T?> {
-        val client = newClient()
-        val request = Request.Builder().url(urlString).build()
-
-        val resp = client.newCall(request).execute()
-        if (!resp.isSuccessful) {
-            throw Exception("响应码：${resp.code}")
-        }
-
-        if (resp.body == null) {
-            throw Exception("响应体为空")
-        }
-
-        // 返回 JSON 文本
-        if (resp.body!!.contentType().toString().contains("application/json")) {
-            val text = resp.body!!.string()
-
-            return parseJSON(text)
-        }
-
-        // 返回文件，保存到应用目录
-        if (resp.body!!.contentType().toString().contains("application/octet-stream")) {
-            val inputStream = resp.body!!.byteStream()
-            val filename = getFilename(resp)
-            val dstDirFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            val tmpPath = dstDirFile.absolutePath + File.separator + filename
-
-            val dstPath = genUniqueFileName(tmpPath)
-            Log.i(itag, "保存文件到：$dstPath")
-
-            val outputStream = FileOutputStream(dstPath)
-            val buffer = ByteArray(4096)
-            var bytesRead: Int
-            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-                outputStream.write(buffer, 0, bytesRead)
-            }
-
-            outputStream.flush()
-
-            return Rest(0, "收到文件，已保存到应用目录", null)
-        }
-
-        // throw Exception("：" + resp.body!!.contentType().toString())
-        return Rest(0, "接收 PC 剪贴板中的文件出错，未知的响应类型：${resp.body!!.contentType().toString()}")
-    }
-
-    /**
      * POST JSON 数据
      */
-    fun <T> postJSON(urlString: String, jsonObj: Any): Rest<T> {
+    inline fun <reified T> postJSON(urlString: String, jsonObj: Any): Rest<T> {
         val client = newClient()
         val json = Comm.gson.toJson(jsonObj)
         val body = json.toRequestBody("application/json;charset=utf-8".toMediaType())
@@ -147,7 +107,7 @@ object Http {
     /**
      * POST 上传文件
      */
-    fun <T> postFiles(urlString: String, uris: List<Uri>, ctx: Context): Rest<T> {
+    inline fun <reified T> postFiles(urlString: String, uris: List<Uri>, ctx: Context): Rest<T> {
         val client = newClient()
         val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
 
@@ -174,8 +134,66 @@ object Http {
         return parseJSON(text)
     }
 
-    private fun <T> parseJSON(text: String): Rest<T> {
-        return Comm.gson.fromJson<Rest<T>>(text, Rest::class.java)
+    /**
+     * 下载文件或目录
+     */
+    fun downloadFileOrDir(fileInfo: FileInfo, dstDirFile: File, pcAddr: String) {
+        // 为文件时，保存到 Android 本地
+        if (!fileInfo.isDir) {
+            val pathEncoded = URLEncoder.encode(fileInfo.path, "UTF-8")
+            val resp = exec("$pcAddr/api/file/download?path=$pathEncoded")
+
+            val inputStream = resp.body!!.byteStream()
+
+            val dstPath = genUniqueFileName(dstDirFile.absolutePath + File.separator + fileInfo.name)
+            Log.i(itag, "downloadFileOrDir: 保存文件到'${dstPath}'")
+
+            val dstFile = File(dstPath)
+            val parentFile = dstFile.parentFile!!
+            if (!parentFile.exists()) {
+                parentFile.mkdirs()
+            }
+
+            dstFile.outputStream().use {
+                inputStream.copyTo(it)
+            }
+
+            return
+        }
+
+        // 为目录时，递归获取子文件
+
+        // 创建子目录
+        val dir = File(dstDirFile, fileInfo.name)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+
+        // 获取目录下的子文件
+        val pathEncoded = URLEncoder.encode(fileInfo.path, "UTF-8")
+        val respList = get<Array<FileInfo>>("$pcAddr/api/file/list?path=$pathEncoded")
+
+        val children = respList.data ?: throw Error("响应的子文件列表为 null")
+        Log.i(itag, "downloadFileOrDir: 远程目录'${fileInfo.path}下有${children.size}个文件（夹）需要处理下载")
+
+        // 递归下载
+        for (child in children) {
+            downloadFileOrDir(child, dir, pcAddr)
+        }
+    }
+
+    /**
+     * 解析 JSON 响应文本为对象
+     *
+     * 为了能用泛型解析复杂的 map，需要手动传递 typeToken：
+     *
+     * val type = object : TypeToken<Rest<FileInfo>>() {}.type
+     *
+     * val rest:Rest<FileInfo> = parseJSON(response, type)
+     */
+    inline fun <reified T> parseJSON(text: String): Rest<T> {
+        val type = object : TypeToken<Rest<T>>() {}.type
+        return Comm.gson.fromJson(text, type)
     }
 
     /**

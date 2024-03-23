@@ -33,7 +33,8 @@ class TaskService : Service(), LifecycleOwner {
         var ACTION_WAKEUP_PC = MyApp.ctx.getString(R.string.shortcut_id_wakeup_pc)
         var ACTION_SHUTDOWN_PC = MyApp.ctx.getString(R.string.shortcut_id_shutdown_pc)
         var ACTION_CLIP_CLEAR = MyApp.ctx.getString(R.string.shortcut_id_clipboard_clear)
-        var ACTION_CLIP_LOAD = MyApp.ctx.getString(R.string.shortcut_id_clipboard_load)
+        var ACTION_CLIP_LOAD_Text = MyApp.ctx.getString(R.string.shortcut_id_clipboard_load_text)
+        var ACTION_CLIP_LOAD_File = MyApp.ctx.getString(R.string.shortcut_id_clipboard_load_file)
         var ACTION_CLIP_SEND = MyApp.ctx.getString(R.string.shortcut_id_clipboard_send)
         var ACTION_MEDIA_TIMED_PAUSE = MyApp.ctx.getString(R.string.shortcut_id_media_timed_pause)
 
@@ -66,7 +67,9 @@ class TaskService : Service(), LifecycleOwner {
 
             ACTION_CLIP_CLEAR -> ClipboardClear()
 
-            ACTION_CLIP_LOAD -> ClipboardLoad()
+            ACTION_CLIP_LOAD_Text -> ClipboardLoadText()
+
+            ACTION_CLIP_LOAD_File -> ClipboardLoadFile()
 
             ACTION_CLIP_SEND -> ClipboardSend(intent.getStringExtra(INTENT_DATA_KEY))
 

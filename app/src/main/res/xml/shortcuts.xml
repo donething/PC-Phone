@@ -22,21 +22,6 @@
         </intent>
     </shortcut>
 
-    <shortcut
-        android:enabled="true"
-        android:icon="@drawable/ic_shortcut_media_timed_pause"
-        android:shortcutId="shortcut_media_timed_pause"
-        android:shortcutShortLabel="@string/shortcut_label_media_timed_pause_short">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetClass="net.donething.pc_phone.ShortcutActivity"
-            android:targetPackage="net.donething.pc_phone">
-            <extra
-                android:name="id"
-                android:value="shortcut_media_timed_pause" />
-        </intent>
-    </shortcut>
-
     <divider />
 
     <shortcut
@@ -56,16 +41,31 @@
 
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_shortcut_clipboard_load"
-        android:shortcutId="shortcut_clipboard_load"
-        android:shortcutShortLabel="@string/shortcut_label_clipboard_load_short">
+        android:icon="@drawable/ic_shortcut_clipboard_load_text"
+        android:shortcutId="shortcut_clipboard_load_text"
+        android:shortcutShortLabel="@string/shortcut_label_clipboard_load_text_short">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="net.donething.pc_phone.ShortcutActivity"
             android:targetPackage="net.donething.pc_phone">
             <extra
                 android:name="id"
-                android:value="shortcut_clipboard_load" />
+                android:value="shortcut_clipboard_load_text" />
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_clipboard_load_file"
+        android:shortcutId="shortcut_clipboard_load_file"
+        android:shortcutShortLabel="@string/shortcut_label_clipboard_load_file_short">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="net.donething.pc_phone.ShortcutActivity"
+            android:targetPackage="net.donething.pc_phone">
+            <extra
+                android:name="id"
+                android:value="shortcut_clipboard_load_file" />
         </intent>
     </shortcut>
 
@@ -82,6 +82,23 @@
             <extra
                 android:name="id"
                 android:value="shortcut_clipboard_clear" />
+        </intent>
+    </shortcut>
+
+    <divider />
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_media_timed_pause"
+        android:shortcutId="shortcut_media_timed_pause"
+        android:shortcutShortLabel="@string/shortcut_label_media_timed_pause_short">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="net.donething.pc_phone.ShortcutActivity"
+            android:targetPackage="net.donething.pc_phone">
+            <extra
+                android:name="id"
+                android:value="shortcut_media_timed_pause" />
         </intent>
     </shortcut>
 
