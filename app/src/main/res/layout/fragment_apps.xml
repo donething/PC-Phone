@@ -27,17 +27,6 @@
         app:layout_constraintStart_toEndOf="@id/bn_apps_backup"
         app:layout_constraintTop_toTopOf="@id/bn_apps_backup" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/sw_apps_display_preinstall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_small"
-        android:checked="false"
-        android:text="@string/apps_preinstall_sw_label"
-        app:layout_constraintBottom_toBottomOf="@id/bn_apps_backup"
-        app:layout_constraintStart_toEndOf="@id/sw_apps_on_googleplay"
-        app:layout_constraintTop_toTopOf="@id/bn_apps_backup" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_apps_list"
         android:layout_width="match_parent"

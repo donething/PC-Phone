@@ -62,7 +62,6 @@
     <!-- 应用 -->
     <string name="apps_backup_bn_title">备份应用信息</string>
     <string name="apps_download_sw_google_label">Google Play</string>
-    <string name="apps_preinstall_sw_label">显示预装</string>
     <string name="apps_entity_icon_label">应用图标</string>
 
     <!-- 选项 -->

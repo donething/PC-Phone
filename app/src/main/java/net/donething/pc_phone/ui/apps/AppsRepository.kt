@@ -69,15 +69,14 @@ class AppsRepository(private val appsDao: AppsDao) {
             emitSource(updatedAppsLiveData)
         }
 
-    // 读取本机已安装的用户应用（排除系统应用、预装应用）
+    /**
+     * 读取本机已安装的用户应用（排除系统应用）
+     */
     private suspend fun getInstalledApps(pm: PackageManager): List<AppEntity> {
-        // 本应用安装时间
-        val installTime = pm.getPackageInfo(MyApp.ctx.packageName, 0).firstInstallTime
-
         return withContext(Dispatchers.IO) {
             val installedApps = pm.getInstalledApplications(PackageManager.GET_META_DATA)
 
-            // 排除系统应用、预装应用
+            // 排除系统应用
             installedApps.filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }.map { appEntity ->
                 val packageName = appEntity.packageName
                 val appName = pm.getApplicationLabel(appEntity).toString()
@@ -85,15 +84,8 @@ class AppsRepository(private val appsDao: AppsDao) {
                 val pi = pm.getPackageInfo(appEntity.packageName, 0)
                 val versionName = pi.versionName ?: "未知版本"
 
-                // 假定：比本应用先安装的即为预装应用
-                val preInstalled = pi.firstInstallTime < installTime
-
-                if (preInstalled) {
-                    Log.i(itag, "getInstalledApps: 预装应用：$appName($packageName)")
-                }
-
                 val app = AppEntity(packageName, appName, versionName, icon)
-                app.preInstalled = preInstalled
+                app.preInstalled = false
 
                 app
             }

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import net.donething.pc_phone.R
 import net.donething.pc_phone.databinding.FragmentAppsBinding
 
-
 // 应用
 class AppsFragment : Fragment() {
     private val itag = this::class.simpleName
@@ -54,7 +53,7 @@ class AppsFragment : Fragment() {
         recyclerView.adapter = adapter
 
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
-        viewModel.allApps.observe(viewLifecycleOwner) {
+        viewModel.filteredApps.observe(viewLifecycleOwner) {
             binding.pbAppsLoading.visibility = View.GONE
 
             it.let { adapter.submitList(it) }
@@ -62,11 +61,5 @@ class AppsFragment : Fragment() {
 
         // 观察LiveData以更新UI
         viewModel.filteredApps.observe(viewLifecycleOwner) { adapter.submitList(it) }
-        // 设置开关监听器来更新是否显示预装应用
-        binding.swAppsDisplayPreinstall.apply {
-            setOnCheckedChangeListener { _, isChecked ->
-                viewModel.setSwPreinstall(isChecked)
-            }
-        }
     }
 }

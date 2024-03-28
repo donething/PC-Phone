@@ -27,7 +27,7 @@ data class AppEntity(
     var installed: Boolean = false
 
     /**
-     * 是否为`预装应用`
+     * 是否为`预装应用`（已删除功能）
      *
      * 安装时间在本应用之前，即判断为`预装应用`
      */

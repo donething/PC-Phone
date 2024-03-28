@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -64,7 +63,7 @@ class AppEntityAdapter(private val fragment: AppsFragment) :
             textVersionName.alpha = currentAppEntity.alpha
         }
 
-        // 根据是否已备份、预装应用设置不同的标识
+        // 根据是否已备份设置不同的标识
         val color = if (currentAppEntity.backuped) R.color.apps_title_had_backuped else R.color.apps_title_no_backup
         holder.textAppName.setTextColor(fragment.requireActivity().getColor(color))
         // 预装应用增加删除线
