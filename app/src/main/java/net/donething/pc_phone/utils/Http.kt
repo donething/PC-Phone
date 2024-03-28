@@ -7,6 +7,7 @@ import android.util.Log
 import com.google.gson.reflect.TypeToken
 import net.donething.pc_phone.entity.FileInfo
 import net.donething.pc_phone.entity.Rest
+import net.donething.pc_phone.ui.preferences.PreferencesRepository
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -43,7 +44,7 @@ fun Uri.asRequestBody(contentResolver: ContentResolver, mimeType: String): Reque
 object Http {
     val itag = this::class.simpleName
 
-    fun newClient(): OkHttpClient {
+    private fun newClient(): OkHttpClient {
         // 默认的 OkHttpClient 的连接超时、读取超时都是10秒
         val builder = OkHttpClient().newBuilder()
             .connectTimeout(10, TimeUnit.SECONDS)
@@ -55,10 +56,20 @@ object Http {
     /**
      * 执行请求
      */
-    fun exec(url: String): Response {
+    fun exec(builder: Request.Builder): Response {
         val client = newClient()
-        val request = Request.Builder().url(url).build()
+        var request = builder.build()
 
+        // 如果访问的是本应用的后台 API，需要加上授权码
+        if (request.url.host == PreferencesRepository.taskMode().pcLanIP &&
+            request.url.port.toString() == PreferencesRepository.taskMode().pcServerPort &&
+            request.url.encodedPath.startsWith("/api/")
+        ) {
+            val bearer = "Bearer ${PreferencesRepository.taskMode().securityAuth}"
+            request = request.newBuilder().addHeader("Authorization", bearer).build()
+        }
+
+        // 建立、执行请求
         val resp = client.newCall(request).execute()
         if (!resp.isSuccessful) {
             throw Exception("响应码：${resp.code}")
@@ -75,7 +86,8 @@ object Http {
      * GET JSON
      */
     inline fun <reified T> get(url: String): Rest<T> {
-        val resp = exec(url)
+        val builder = Request.Builder().url(url)
+        val resp = exec(builder)
         val text = resp.body!!.string()
 
         return parseJSON(text)
@@ -85,19 +97,11 @@ object Http {
      * POST JSON 数据
      */
     inline fun <reified T> postJSON(urlString: String, jsonObj: Any): Rest<T> {
-        val client = newClient()
         val json = Comm.gson.toJson(jsonObj)
         val body = json.toRequestBody("application/json;charset=utf-8".toMediaType())
-        val request = Request.Builder().url(urlString).post(body).build()
 
-        val resp = client.newCall(request).execute()
-        if (!resp.isSuccessful) {
-            throw Exception("响应码：${resp.code}")
-        }
-
-        if (resp.body == null) {
-            throw Exception("响应体为空")
-        }
+        val builder = Request.Builder().url(urlString).post(body)
+        val resp = exec(builder)
 
         val text = resp.body!!.string()
 
@@ -108,26 +112,17 @@ object Http {
      * POST 上传文件
      */
     inline fun <reified T> postFiles(urlString: String, uris: List<Uri>, ctx: Context): Rest<T> {
-        val client = newClient()
-        val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
+        val bodyBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
 
         for (uri in uris) {
             Log.i(itag, "当前发送的文件：${uri.path}")
             val requestBody = uri.asRequestBody(ctx.contentResolver, "application/octet-stream")
-            builder.addFormDataPart("file", File(uri.path ?: "未知文件名").name, requestBody)
+            bodyBuilder.addFormDataPart("file", File(uri.path ?: "未知文件名").name, requestBody)
         }
 
-        val request = Request.Builder().url(urlString).post(builder.build()).build()
+        val builder = Request.Builder().url(urlString).post(bodyBuilder.build())
 
-        val resp = client.newCall(request).execute()
-
-        if (!resp.isSuccessful) {
-            throw Exception("响应码：${resp.code}")
-        }
-
-        if (resp.body == null) {
-            throw Exception("响应体为空")
-        }
+        val resp = exec(builder)
 
         val text = resp.body!!.string()
 
@@ -141,7 +136,8 @@ object Http {
         // 为文件时，保存到 Android 本地
         if (!fileInfo.isDir) {
             val pathEncoded = URLEncoder.encode(fileInfo.path, "UTF-8")
-            val resp = exec("$pcAddr/api/file/download?path=$pathEncoded")
+            val builder = Request.Builder().url("$pcAddr/api/file/download?path=$pathEncoded")
+            val resp = exec(builder)
 
             val inputStream = resp.body!!.byteStream()
 

@@ -1,5 +1,6 @@
 package net.donething.pc_phone.database
 
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
@@ -14,6 +15,7 @@ import androidx.room.Query
 data class PreferenceEntity(
     // 作为设置使用，目前只会有唯一行，使用固定的 ID 1
     @PrimaryKey val id: Int = 1,
+    @ColumnInfo(defaultValue = "") var securityAuth: String = "",
     var pcLanIP: String = "",
     var pcServerPort: String = "",
     var pcMAC: String = ""

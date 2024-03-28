@@ -2,6 +2,7 @@ package net.donething.pc_phone.database
 
 import android.content.Context
 import android.util.Log
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -20,7 +21,12 @@ val DB_NAME = "${MyApp.ctx.packageName}.db"
 /**
  * 数据库
  */
-@Database(entities = [AppEntity::class, PreferenceEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [AppEntity::class, PreferenceEntity::class],
+    version = 2,
+    exportSchema = true,
+    autoMigrations = [AutoMigration(from = 1, to = 2)]
+)
 abstract class MyDatabase : RoomDatabase() {
     /**
      * 各个数据表的 DAO

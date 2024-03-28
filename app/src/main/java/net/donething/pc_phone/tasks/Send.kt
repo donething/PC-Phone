@@ -28,6 +28,10 @@ class SendFilesToPC(data: ArrayList<Uri>?) : ITask<ArrayList<Uri>>(data) {
 
         val obj = Http.postFiles<Map<String, String>>("$pcAddr/api/file/send", data, MyApp.ctx)
 
+        if (obj.code != 0) {
+            return obj.msg
+        }
+
         val result = StringBuilder()
 
         obj.data?.forEach { (key, value) ->

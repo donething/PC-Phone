@@ -70,7 +70,7 @@ class ClipboardLoadFile : ITask<Nullable>() {
         // 保存文件
         Http.downloadFileOrDir(obj.data, Comm.fileRoot, pcAddr)
 
-        return "已保存远程文件(夹)'${obj.data.path}'到'${Comm.fileRoot.absolutePath}'"
+        return "已获取远程文件(夹)'${obj.data.path}'到'${Comm.fileRoot.absolutePath}'"
     }
 }
 

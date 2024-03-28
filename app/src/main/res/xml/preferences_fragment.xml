@@ -3,6 +3,15 @@
 <!-- preferences 被视作资源文件，不能放在 layout 中 -->
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:title="安全设置"
+        app:iconSpaceReserved="false">
+        <EditTextPreference
+            android:key="security_auth"
+            android:summary="需和 PC 端的配置保持一致"
+            android:title="操作授权码"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:title="PC 设置"

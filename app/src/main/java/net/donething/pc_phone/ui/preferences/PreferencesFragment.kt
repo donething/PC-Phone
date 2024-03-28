@@ -86,6 +86,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), OnSharedPreferenceChange
 
         viewModel.preference.observe(viewLifecycleOwner) { preference ->
             // 使用 preference 更新 UI
+            findPreference<EditTextPreference>("security_auth")!!.text = preference.securityAuth
             findPreference<EditTextPreference>("pc_lan_ip")!!.text = preference.pcLanIP
             findPreference<EditTextPreference>("pc_server_port")!!.text = preference.pcServerPort
             findPreference<EditTextPreference>("pc_mac")!!.text = preference.pcMAC
@@ -110,6 +111,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), OnSharedPreferenceChange
         // 设置对应选项的值
         val currentPreference: PreferenceEntity = viewModel.preference.value!!
         when (key) {
+            "security_auth" -> currentPreference.securityAuth = prefs.getString(key, "").toString()
             "pc_lan_ip" -> currentPreference.pcLanIP = prefs.getString(key, "").toString()
             "pc_server_port" -> currentPreference.pcServerPort = prefs.getString(key, "").toString()
             "pc_mac" -> currentPreference.pcMAC = prefs.getString(key, "").toString()
