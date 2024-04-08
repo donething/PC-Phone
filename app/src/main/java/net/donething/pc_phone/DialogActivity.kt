@@ -1,8 +1,13 @@
 package net.donething.pc_phone
 
+import android.content.ClipData
+import android.content.ClipDescription
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import net.donething.pc_phone.databinding.ActivityDialogBinding
 
@@ -40,7 +45,20 @@ open class DialogActivity : AppCompatActivity() {
         }
 
         // 绑定事件
-        binding.bnActivityDialogCancel.setOnClickListener {
+        binding.bnActivityDialogCopy.setOnClickListener {
+            if (intent?.getStringExtra(dialogContentKey) != null) {
+                // 复制文本
+                val content = intent.getStringExtra(dialogContentKey)
+
+                val clipManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText(ClipDescription.MIMETYPE_TEXT_PLAIN, content)
+                clipManager.setPrimaryClip(clip)
+
+                Toast.makeText(this, "已复制内容", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "复制失败：内容为空", Toast.LENGTH_LONG).show()
+            }
+
             finishAndRemoveTask()
         }
         binding.bnActivityDialogOk.setOnClickListener {

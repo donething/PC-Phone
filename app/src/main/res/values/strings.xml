@@ -46,7 +46,7 @@
     <string name="shortcut_tip_clipbroad_send_read_text_fail">读取剪贴板中的文本失败</string>
 
     <string name="bn_ok">确定</string>
-    <string name="bn_cancel">取消</string>
+    <string name="bn_copy">复制内容</string>
 
     <!-- 分享 -->
     <string name="share_activity_title">分享到…</string>

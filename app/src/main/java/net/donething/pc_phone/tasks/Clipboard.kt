@@ -1,6 +1,7 @@
 package net.donething.pc_phone.tasks
 
 import android.content.ClipData
+import android.content.ClipDescription
 import android.content.ClipboardManager
 import android.content.Context
 import android.util.Log
@@ -35,7 +36,7 @@ class ClipboardLoadText : ITask<Nullable>() {
         }
 
         val clipManager = MyApp.ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("text", obj.data)
+        val clip = ClipData.newPlainText(ClipDescription.MIMETYPE_TEXT_PLAIN, obj.data)
         clipManager.setPrimaryClip(clip)
 
         return "\"${obj.data}\""
@@ -104,7 +105,7 @@ class ClipboardClear : ITask<Nullable>() {
         Log.i(itag, "执行：$label")
 
         val clipManager = MyApp.ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("text", "")
+        val clip = ClipData.newPlainText(ClipDescription.MIMETYPE_TEXT_PLAIN, "")
         clipManager.setPrimaryClip(clip)
 
         return MyApp.ctx.getString(R.string.shortcut_tip_clipboard_clear_success)

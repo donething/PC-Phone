@@ -49,13 +49,13 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/bn_activity_dialog_cancel"
-            style="?android:attr/buttonBarNegativeButtonStyle"
+            android:id="@+id/bn_activity_dialog_copy"
+            style="?android:attr/buttonBarNeutralButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="@dimen/padding_small"
-            android:text="@string/bn_cancel"
+            android:text="@string/bn_copy"
             android:textSize="@dimen/text" />
 
         <Button
